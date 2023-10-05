@@ -1,9 +1,8 @@
 import dotenv from "dotenv";
+
 dotenv.config();
 
-console.log(process.env.DEV_DB_PASSWORD, "process.env.DEV_DB_PASSWORD");
-
-module.exports = {
+export default {
   development: {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
