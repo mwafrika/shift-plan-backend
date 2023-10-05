@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ export default {
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
     port: 5432,
-    dialect: "postgres",
+    dialect: 'postgres',
     dialectOptions: {
       bigNumberStrings: true,
     },
@@ -18,9 +18,9 @@ export default {
     username: process.env.TEST_DB_USERNAME,
     password: process.env.TEST_DB_PASSWORD,
     database: process.env.TEST_DB_NAME,
-    host: "localhost",
+    host: 'localhost',
     port: 5432,
-    dialect: "postgres",
+    dialect: 'postgres',
     dialectOptions: {
       bigNumberStrings: true,
     },
@@ -31,7 +31,7 @@ export default {
     database: process.env.PROD_DB_NAME,
     host: process.env.PROD_DB_HOSTNAME,
     port: process.env.PROD_DB_PORT,
-    dialect: "postgres",
+    dialect: 'postgres',
     dialectOptions: {
       bigNumberStrings: true,
     },
