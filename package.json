@@ -10,7 +10,8 @@
     "lint": "eslint \"{src,test}/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "jest --coverage --coverageDirectory=coverage --runInBand --forceExit",
-    "test:watch": "jest --runInBand --forceExit --watch"
+    "test:watch": "jest --runInBand --forceExit --watch",
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
