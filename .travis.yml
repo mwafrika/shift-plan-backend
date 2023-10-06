@@ -20,6 +20,6 @@ script:
   - npm run test
   - npm run lint
 
-after_success:
+after_success: npm run coverage
   - npm install -g coveralls
   - coveralls < coverage/lcov.info
