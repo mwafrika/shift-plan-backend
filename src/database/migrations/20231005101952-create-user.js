@@ -4,9 +4,9 @@ module.exports = {
     await queryInterface.createTable('User', {
       id: {
         allowNull: false,
-        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.DataTypes.INTEGER,
+        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -29,25 +29,36 @@ module.exports = {
           },
         },
       },
-      photo: {
+      password: {
         type: Sequelize.STRING,
         validate: {
           notEmpty: true,
+          is: /^[0-9a-f]{64}$/i,
+          len: {
+            args: [6, 20],
+            msg: 'Password must be between 6 and 20 characters.',
+          },
+        },
+      },
+      photo: {
+        type: Sequelize.STRING,
+        validate: {
+          notEmpty: false,
           isUrl: true,
           msg: 'Photo must be a url',
         },
       },
       roleId: {
-        type: Sequelize.UUID,
-        validate: {
-          notEmpty: true,
-          isUUID: 4,
-        },
+        type: Sequelize.INTEGER,
+        // validate: {
+        //   notEmpty: false,
+        //   isUUID: 4,
+        // },
       },
       phone: {
         type: Sequelize.STRING,
         validate: {
-          notEmpty: true,
+          notEmpty: false,
           is: /^\+?[0-9()\-\s]+$/,
           len: {
             args: [7, 15],
@@ -83,11 +94,11 @@ module.exports = {
         },
       },
       departmentId: {
-        type: Sequelize.UUID,
-        validate: {
-          notEmpty: true,
-          isUUID: 4,
-        },
+        type: Sequelize.INTEGER,
+        // validate: {
+        //   notEmpty: false,
+        //   isUUID: 4,
+        // },
       },
       createdAt: {
         allowNull: false,

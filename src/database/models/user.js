@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -13,20 +11,24 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    photo: DataTypes.STRING,
-    roleId: DataTypes.UUID,
-    phone: DataTypes.STRING,
-    address: DataTypes.TEXT,
-    country: DataTypes.STRING,
-    city: DataTypes.STRING,
-    departmentId: DataTypes.UUID,
-  }, {
-    sequelize,
-    modelName: 'User',
-    freezeTableName: true,
-  });
+  User.init(
+    {
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      photo: DataTypes.STRING,
+      roleId: DataTypes.UUID,
+      phone: DataTypes.STRING,
+      address: DataTypes.TEXT,
+      country: DataTypes.STRING,
+      city: DataTypes.STRING,
+      departmentId: DataTypes.UUID,
+    },
+    {
+      sequelize,
+      modelName: 'User',
+      freezeTableName: true,
+    },
+  );
   return User;
 };

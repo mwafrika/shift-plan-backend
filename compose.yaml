@@ -12,9 +12,9 @@ services:
     build:
       context: .
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
     ports:
-      - 7000:7000
+      - 5000:5000
     depends_on:
       - db
     restart: always
@@ -22,7 +22,7 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_DB: shiftDB
+      POSTGRES_DB: shift_db_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: josmwafrika789
     ports:

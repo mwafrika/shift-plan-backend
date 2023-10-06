@@ -2,8 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import setPort from "./src/utils/manageEnv";
-import config from "./src/config/database";
-import database from "./src/config/database";
+import AuthRoutes from "./src/routes/auth";
 const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
 
 const app = express();
@@ -22,10 +21,10 @@ app.get("/api/v1", (req, res) => {
   });
 });
 
-// const environment = app.get("env");
-// const PORT = setPort(environment);
+app.use("/api/v1/auth", AuthRoutes);
 
-const PORT = 7000;
+const environment = app.get("env");
+const PORT = setPort(environment);
 
 app.listen(PORT, () => {
   console.log(`The server is listening on ${PORT}`);
