@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import nodeMailer from 'nodemailer';
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import nodeMailer from "nodemailer";
+import dotenv from "dotenv";
 
 dotenv.config();
 export const generateToken = (user) => {
@@ -25,7 +25,7 @@ export const hashPassword = async (password) => {
 export const sendEmail = async (email, subject, text) => {
   try {
     const transporter = nodeMailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,

@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('User', {
+    await queryInterface.createTable("User", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -14,7 +14,7 @@ module.exports = {
           notEmpty: true,
           len: {
             args: [3, 20],
-            msg: 'Username must be between 3 and 20 characters.',
+            msg: "Username must be between 3 and 20 characters.",
           },
         },
       },
@@ -25,7 +25,7 @@ module.exports = {
           isEmail: true,
           len: {
             args: [3, 50],
-            msg: 'Email must be between 3 and 50 characters.',
+            msg: "Email must be between 3 and 50 characters.",
           },
         },
       },
@@ -36,7 +36,7 @@ module.exports = {
           is: /^[0-9a-f]{64}$/i,
           len: {
             args: [6, 20],
-            msg: 'Password must be between 6 and 20 characters.',
+            msg: "Password must be between 6 and 20 characters.",
           },
         },
       },
@@ -45,7 +45,7 @@ module.exports = {
         validate: {
           notEmpty: false,
           isUrl: true,
-          msg: 'Photo must be a url',
+          msg: "Photo must be a url",
         },
       },
       roleId: {
@@ -62,7 +62,7 @@ module.exports = {
           is: /^\+?[0-9()\-\s]+$/,
           len: {
             args: [7, 15],
-            msg: 'Phone must be between 7 and 15 characters.',
+            msg: "Phone must be between 7 and 15 characters.",
           },
         },
       },
@@ -71,7 +71,7 @@ module.exports = {
         validate: {
           len: {
             args: [3, 100],
-            msg: 'Address must be between 3 and 100 characters.',
+            msg: "Address must be between 3 and 100 characters.",
           },
         },
       },
@@ -80,7 +80,7 @@ module.exports = {
         validate: {
           len: {
             args: [3, 20],
-            msg: 'Country must be between 3 and 20 characters.',
+            msg: "Country must be between 3 and 20 characters.",
           },
         },
       },
@@ -89,7 +89,7 @@ module.exports = {
         validate: {
           len: {
             args: [3, 20],
-            msg: 'City must be between 3 and 20 characters.',
+            msg: "City must be between 3 and 20 characters.",
           },
         },
       },
@@ -111,6 +111,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable("User");
   },
 };
