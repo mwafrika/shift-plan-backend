@@ -9,8 +9,8 @@
     "start:dev": "nodemon app.js --exec babel-node --",
     "lint": "eslint \"{src,test}/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
-    "test": "jest --coverage --coverageDirectory=coverage --runInBand --forceExit",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls --runInBand --forceExit",
+    "test": "jest --runInBand --forceExit",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "test:watch": "jest --runInBand --forceExit --watch",
     "migrate": "npx sequelize-cli db:migrate"
   },
