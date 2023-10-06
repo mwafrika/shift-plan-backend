@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import nodeMailer from 'nodemailer';
 import dotenv from 'dotenv';
+
 dotenv.config();
 export const generateToken = (user) => {
   const token = jwt.sign(
@@ -50,8 +51,3 @@ export const isTokenExpired = (token) => {
     return true;
   }
 };
-
-
-
-
-
