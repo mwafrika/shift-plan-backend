@@ -1,4 +1,5 @@
 import { User } from '../database/models/index';
+
 export const findUserByEmail = async (email) => User.findOne({
   where: {
     email,

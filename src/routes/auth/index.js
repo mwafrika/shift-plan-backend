@@ -5,6 +5,7 @@ import {
   forgetPassword,
   resetPassword,
 } from '../../controllers/auth';
+
 const router = Router()
   .post('/login', login)
   .post('/register', register)

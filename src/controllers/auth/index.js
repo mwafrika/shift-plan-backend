@@ -1,17 +1,17 @@
-import { StatusCodes } from "http-status-codes";
-import bcrypt from "bcryptjs";
+import { StatusCodes } from 'http-status-codes';
+import bcrypt from 'bcryptjs';
 import {
   findUserByEmail,
   createUser,
   updateUser,
   findUserById,
-} from "../../services/auth.service";
+} from '../../services/auth.service';
 import {
   hashPassword,
   generateToken,
   isTokenExpired,
   sendEmail,
-} from "../../utils/auth";
+} from '../../utils/auth';
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -76,7 +76,7 @@ export const forgetPassword = async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      message: "User not found",
+      message: 'User not found',
     });
   }
 
@@ -84,12 +84,12 @@ export const forgetPassword = async (req, res) => {
 
   const info = await sendEmail(
     email,
-    "Password reset",
-    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`
+    'Password reset',
+    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`,
   );
 
   return res.status(StatusCodes.OK).send({
-    message: "Password reset email sent",
+    message: 'Password reset email sent',
     info,
   });
 };
@@ -102,7 +102,7 @@ export const resetPassword = async (req, res) => {
 
   if (!user) {
     return res.status(404).send({
-      message: "User not found",
+      message: 'User not found',
     });
   }
 
@@ -112,7 +112,7 @@ export const resetPassword = async (req, res) => {
 
   if (isTokenValid) {
     return res.status(401).send({
-      message: "Invalid token",
+      message: 'Invalid token',
     });
   }
 
@@ -124,11 +124,11 @@ export const resetPassword = async (req, res) => {
 
   if (!updatedUser) {
     return res.status(400).send({
-      message: "Error while updating user",
+      message: 'Error while updating user',
     });
   }
 
   return res.status(StatusCodes.OK).send({
-    message: "Password reset successful",
+    message: 'Password reset successful',
   });
 };
