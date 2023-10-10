@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import setPort from "./src/utils/manageEnv";
 import AuthRoutes from "./src/routes/auth";
-import RoleRoutes from "./src/routes/role";
 const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
 
 const app = express();
@@ -23,7 +22,6 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.use("/api/v1/auth", AuthRoutes);
-app.use("/api/v1/roles", RoleRoutes);
 
 const environment = app.get("env");
 const PORT = setPort(environment);
