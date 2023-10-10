@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import nodeMailer from "nodemailer";
-
 export const generateToken = (user) => {
   const token = jwt.sign(
     {
@@ -42,7 +41,6 @@ export const sendEmail = async (email, subject, text) => {
     console.log(error);
   }
 };
-
 export const isTokenExpired = (token) => {
   try {
     const decoded = jwt.decode(token, { complete: true });
