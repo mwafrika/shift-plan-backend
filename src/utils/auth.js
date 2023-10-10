@@ -13,7 +13,7 @@ export const generateToken = (user) => {
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRES_IN,
-    },
+    }
   );
   return token;
 };
@@ -50,4 +50,27 @@ export const isTokenExpired = (token) => {
   } catch (error) {
     return true;
   }
+};
+
+export const generateRandomPassword = () => {
+  const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+  const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const digitChars = "0123456789";
+  const specialChars = "!@#$%^&*";
+
+  const allChars = `${lowercaseChars}${uppercaseChars}${digitChars}${specialChars}`;
+  // Initialize the password with a random character from each category
+  let password = "";
+  password += lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)];
+  password += uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)];
+  password += digitChars[Math.floor(Math.random() * digitChars.length)];
+  password += specialChars[Math.floor(Math.random() * specialChars.length)];
+
+  const requiredLength = 8;
+  while (password.length < requiredLength) {
+    const randomIndex = Math.floor(Math.random() * allChars.length);
+    password += allChars[randomIndex];
+  }
+
+  return password;
 };
