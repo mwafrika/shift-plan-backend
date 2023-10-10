@@ -10,12 +10,13 @@ ARG NODE_VERSION=18.16.1
 # Use node image for base image for all stages.
 FROM node:${NODE_VERSION}-alpine as base
 
-WORKDIR /app
+WORKDIR /src
 
 COPY package.json ./
 
 RUN npm i
-
+RUN npx sequelize init
+RUN npx sequelize db:migrate --config config/database.js
 COPY . ./
 
 EXPOSE 5000

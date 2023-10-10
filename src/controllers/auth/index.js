@@ -26,11 +26,17 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findUserByEmail(email);
 
-  if (!user) formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+  if (!user)
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid)
-    formatResponse(res, StatusCodes.UNAUTHORIZED, null, "Invalid password");
+    return formatResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      null,
+      "Invalid password"
+    );
 
   const token = generateToken(user);
   return formatResponse(res, StatusCodes.OK, { token });

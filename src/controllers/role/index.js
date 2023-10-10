@@ -21,20 +21,23 @@ export const getRole = async (req, res) => {
   const { id } = req.params;
   const role = await findRoleById(id);
 
-  if (!role) formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+  if (!role)
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
   return formatResponse(res, StatusCodes.OK, role);
 };
 
 export const createNewRole = async (req, res) => {
   const { name, description } = req.body;
   const role = await findRoleByName(name);
-  if (role)
+  if (role) {
     return formatResponse(
       res,
       StatusCodes.CONFLICT,
       null,
       "Role already exists"
     );
+  }
+
   const newRole = await createRole({ name, description });
   return formatResponse(res, StatusCodes.CREATED, newRole);
 };
