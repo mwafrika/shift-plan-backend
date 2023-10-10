@@ -13,12 +13,7 @@ let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config,);
 } else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config,
-  );
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
 fs.readdirSync(__dirname,)
@@ -28,11 +23,8 @@ fs.readdirSync(__dirname,)
       && file.slice(-3,) === ".js"
       && file.indexOf(".test.js",) === -1,
   )
-  .forEach((file,) => {
-    const model = require(path.join(__dirname, file,),)(
-      sequelize,
-      Sequelize.DataTypes,
-    );
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   },);
 
