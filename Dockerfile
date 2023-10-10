@@ -6,31 +6,22 @@
 
 ARG NODE_VERSION=18.16.1
 
-FROM node:${NODE_VERSION}-alpine
+################################################################################
+# Use node image for base image for all stages.
+FROM node:${NODE_VERSION}-alpine as base
 
-# Use production node environment by default.
-ENV NODE_ENV production
+WORKDIR /src
 
+COPY package.json ./
 
-WORKDIR /usr/src/app
+RUN npm i
+RUN npx sequelize init
+RUN npx sequelize db:migrate --config config/database.js
+COPY . ./
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
-# into this layer.
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+EXPOSE 5000
 
-# Run the application as a non-root user.
-USER node
+# RUN ["chmod","+x","entrypoint.sh"]
+CMD ["npm", "run", "start:dev"]
 
-# Copy the rest of the source files into the image.
-COPY . .
-
-# Expose the port that the application listens on.
-EXPOSE 7000
-
-# Run the application.
-CMD npm start
+# RUN npm start:dev
