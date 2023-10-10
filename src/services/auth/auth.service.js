@@ -12,4 +12,5 @@ export const findUserById = async (id, options = {}) => User.findOne({
   },
   ...options,
 });
+
 export const createUser = async (user) => User.create(user);

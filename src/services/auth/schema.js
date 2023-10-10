@@ -1,14 +1,13 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const schema = Joi.object({
-  name: Joi.string().min(6).max(30).required()
-    .messages({
-      'string.base': 'Name should be a string',
-      'string.empty': 'Name cannot be empty',
-      'string.min': 'Name should have a minimum length of {#limit}',
-      'string.max': 'Name should have a maximum length of {#limit}',
-      'any.required': 'Name is a required field',
-    }),
+  name: Joi.string().min(6).max(30).required().messages({
+    "string.base": "Name should be a string",
+    "string.empty": "Name cannot be empty",
+    "string.min": "Name should have a minimum length of {#limit}",
+    "string.max": "Name should have a maximum length of {#limit}",
+    "any.required": "Name is a required field",
+  }),
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
