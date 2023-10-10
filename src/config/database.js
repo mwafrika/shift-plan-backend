@@ -31,7 +31,13 @@ module.exports = {
     port: process.env.PROD_DB_PORT,
     dialect: "postgres",
     dialectOptions: {
+<<<<<<< HEAD
       bigNumberStrings: true
     }
   }
+=======
+      bigNumberStrings: true,
+    },
+  },
+>>>>>>> 8a7b930 (Create user and company)
 };
