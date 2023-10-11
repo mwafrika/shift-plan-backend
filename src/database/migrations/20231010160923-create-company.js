@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Company', {
+    await queryInterface.createTable("Company", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,8 +24,8 @@ module.exports = {
         type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.ENUM('pending', 'approved', 'denied'),
-        defaultValue: 'pending',
+        type: Sequelize.ENUM("pending", "approved", "denied"),
+        defaultValue: "pending",
       },
       companyDescription: {
         type: Sequelize.TEXT,
@@ -50,6 +50,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('Company');
+    await queryInterface.dropTable("Company");
   },
 };

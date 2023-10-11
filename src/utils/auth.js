@@ -22,7 +22,7 @@ export const hashPassword = async (password) => {
 export const sendEmail = async (email, subject, text) => {
   try {
     const transporter = nodeMailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,
