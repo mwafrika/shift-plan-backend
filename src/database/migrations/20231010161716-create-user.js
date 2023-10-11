@@ -38,6 +38,10 @@ module.exports = {
       city: {
         type: Sequelize.STRING,
       },
+      companyId: {
+        type: Sequelize.INTEGER,
+      },
+
       departmentId: {
         type: Sequelize.INTEGER,
       },
