@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const schema = Joi.object({
   name: Joi.string().min(6).max(30).required()
@@ -138,7 +138,7 @@ const schema = Joi.object({
       "number.positive": "companyId should be a positive number"
     }),
   status: Joi.string()
-    .valid('pending', 'approved', 'denied')
+    .valid("pending", "approved", "denied")
     .optional()
     .messages({
       "string.base": "Status should be a string",

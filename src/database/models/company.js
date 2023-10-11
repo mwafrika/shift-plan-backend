@@ -1,21 +1,11 @@
-<<<<<<< HEAD
-const { Model } = require("sequelize");
-=======
 const { Model } = require('sequelize');
->>>>>>> 857f2e0 (show all users)
 
 module.exports = (sequelize, DataTypes) => {
   class Company extends Model {
     static associate(models) {
       Company.hasMany(models.User, {
-<<<<<<< HEAD
         foreignKey: "companyId",
         as: "users"
-=======
-        foreignKey: 'companyId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
->>>>>>> 857f2e0 (show all users)
       });
     }
   }
