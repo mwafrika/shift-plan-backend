@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import nodeMailer from "nodemailer";
+
 export const generateToken = (user) => {
   const token = jwt.sign(
     {
