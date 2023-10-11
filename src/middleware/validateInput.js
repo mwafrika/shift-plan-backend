@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import userSchema, { validateIdOnly } from "../services/auth/schema";
 import shiftSchema from "../services/shift/shema";
+import StatusSchema from "../services/company/schema";
 
 export const validateData = (req, res, next, data, validationSchema) => {
   const { error } = validationSchema.validate(data);
@@ -27,4 +28,10 @@ export const validateID = (req, res, next) => {
   const { id } = req.params;
   const validationSchema = validateIdOnly;
   validateData(req, res, next, { id }, validationSchema);
+};
+
+export const validateStatus = (req, res, next) => {
+  const { status } = req.body;
+  const validationSchema = StatusSchema;
+  validateData(req, res, next, { status }, validationSchema);
 };

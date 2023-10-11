@@ -9,3 +9,9 @@ export const findCompanyById = async (id, options = {}) => Company.findOne({
 
 export const createCompany = async (company) => Company.create(company);
 export const getCompanyWhere = async (where) => Company.findOne({ where });
+export const updateCompany = async (id, company, options = {}) => Company.update(company, {
+  where: {
+    id
+  },
+  ...options
+});
