@@ -4,10 +4,8 @@ module.exports = (sequelize, DataTypes) => {
   class Company extends Model {
     static associate(models) {
       Company.hasMany(models.User, {
-        foreignKey: 'companyId',
-        as: 'users',
-        // onDelete: "CASCADE",
-        // onUpdate: "CASCADE",
+        foreignKey: "companyId",
+        as: "users",
       });
     }
   }

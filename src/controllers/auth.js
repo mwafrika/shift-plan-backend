@@ -4,6 +4,8 @@ import {
   createUser,
   findUserById,
   updateUser,
+  findAllUsers,
+  deleteUser,
 } from "../services/auth/auth.service";
 import { createCompany } from "../services/company/company.service";
 import {
@@ -133,5 +135,200 @@ export const resetPassword = async (req, res) => {
 
   return formatResponse(res, StatusCodes.OK, {
     message: "Password updated successfully",
+  });
+};
+
+export const getUsers = async (req, res) => {
+  const { companyId } = req.user;
+  try {
+    const users = await findAllUsers({
+      where: {
+        companyId: companyId,
+      },
+      attributes: [
+        "id",
+        "name",
+        "email",
+        "roleId",
+        "companyId",
+        "departmentId",
+        "isActive",
+        "profilePicture",
+        "createdAt",
+        "updatedAt",
+      ],
+    });
+
+    if (users.length === 0) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "Users not found");
+    }
+    return formatResponse(res, StatusCodes.OK, users);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const getUser = async (req, res) => {
+  const { id, companyId } = req.params;
+
+  try {
+    const user = await findUserById(
+      id,
+      {
+        companyId,
+      },
+      {
+        attributes: [
+          "id",
+          "name",
+          "email",
+          "roleId",
+          "companyId",
+          "departmentId",
+          "isActive",
+          "profilePicture",
+          "createdAt",
+          "updatedAt",
+        ],
+      }
+    );
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+    return formatResponse(res, StatusCodes.OK, user);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const updateUserData = async (req, res) => {
+  const { id, companyId } = req.params;
+  const { name, email, password, profilePicture } = req.body;
+
+  try {
+    const user = await findUserById(id, {
+      companyId,
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const updatedUser = await updateUser(id, {
+      name,
+      email,
+      password: hashedPassword,
+      profilePicture,
+    });
+
+    if (!updatedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error updating user"
+      );
+    }
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "User updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const deleteUserData = async (req, res) => {
+  const { id, companyId } = req.params;
+  try {
+    const user = await findUserById(id, {
+      companyId,
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const deletedUser = await deleteUser(user.id);
+
+    if (!deletedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error deleting user"
+      );
+    }
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const createUserData = async (req, res) => {
+  const { companyId } = req.user;
+  const { name, email, password, profilePicture } = req.body;
+
+  const user = await findUserById(id, {
+    companyId,
+    email,
+  });
+
+  if (user) {
+    return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
+  }
+
+  const hashedPassword = await hashPassword(password);
+
+  const newUser = await createUser({
+    name,
+    email,
+    password: hashedPassword,
+    profilePicture,
+    companyId,
+  });
+
+  if (!newUser) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "Error creating user"
+    );
+  }
+
+  const token = generateToken(newUser);
+
+  return formatResponse(res, StatusCodes.CREATED, {
+    message: "User created successfully",
+    token,
+    newUser,
   });
 };
