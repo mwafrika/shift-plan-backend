@@ -6,7 +6,8 @@ import {
   findUserById,
   updateUser,
   findAllUsers,
-  deleteUser
+  deleteUser,
+  findUserWhere
 } from "../services/auth/auth.service";
 import { createCompany } from "../services/company/company.service";
 import {
@@ -201,8 +202,45 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const deleteUserData = async (req, res) => {
+  const { id } = req.params;
+  const { companyId } = req.user;
+  try {
+    const user = await findUserById(id, {
+      companyId
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const deletedUser = await deleteUser(user.id);
+
+    if (!deletedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error deleting user"
+      );
+    }
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "User deleted successfully"
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
 export const getUser = async (req, res) => {
-  const { id, companyId } = req.params;
+  const { id } = req.params;
+  const { companyId } = req.user;
 
   try {
     const user = await findUserById(
@@ -241,9 +279,10 @@ export const getUser = async (req, res) => {
 };
 
 export const updateUserData = async (req, res) => {
-  const { id, companyId } = req.params;
+  const { id } = req.params;
+  const { companyId } = req.user;
   const {
-    name, email, password, profilePicture
+    name, email, profilePicture
   } = req.body;
 
   try {
@@ -255,12 +294,9 @@ export const updateUserData = async (req, res) => {
       return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
     }
 
-    const hashedPassword = await hashPassword(password);
-
     const updatedUser = await updateUser(id, {
       name,
       email,
-      password: hashedPassword,
       profilePicture
     });
 
@@ -287,49 +323,13 @@ export const updateUserData = async (req, res) => {
   }
 };
 
-export const deleteUserData = async (req, res) => {
-  const { id, companyId } = req.params;
-  try {
-    const user = await findUserById(id, {
-      companyId
-    });
-
-    if (!user) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
-    }
-
-    const deletedUser = await deleteUser(user.id);
-
-    if (!deletedUser) {
-      return formatResponse(
-        res,
-        StatusCodes.BAD_REQUEST,
-        null,
-        "Error deleting user"
-      );
-    }
-
-    return formatResponse(res, StatusCodes.OK, {
-      message: "User deleted successfully"
-    });
-  } catch (error) {
-    return formatResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      null,
-      error.message
-    );
-  }
-};
-
 export const createUserData = async (req, res) => {
   const { companyId } = req.user;
-  const { id } = req.params;
   const {
     name, email, password, profilePicture
   } = req.body;
 
-  const user = await findUserById(id, {
+  const user = await findUserWhere({
     companyId,
     email
   });
