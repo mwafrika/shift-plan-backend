@@ -112,18 +112,6 @@ const schema = Joi.object({
       "string.min": "Description should have a minimum length of {#limit}",
       "string.max": "Description should have a maximum length of {#limit}"
     }),
-  companyCountry: Joi.string().min(6).max(30).optional().messages({
-    "string.base": "The country of the company should be a string",
-    "string.min":
-      "The country of the company should have a minimum length of {#limit}",
-    "string.max":
-      "The country of the company should have a maximum length of {#limit}",
-  }),
-  companyDescription: Joi.string().min(6).max(200).optional().messages({
-    "string.base": "Description should be a string",
-    "string.min": "Description should have a minimum length of {#limit}",
-    "string.max": "Description should have a maximum length of {#limit}",
-  }),
   companyPhone: Joi.string()
     .pattern(/^\+?[0-9()\-\s]+$/)
     .optional()
