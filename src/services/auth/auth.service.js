@@ -1,4 +1,4 @@
-import { User } from "../../database/models/index";
+import { User } from '../../database/models/index';
 
 export const findUserByEmail = async (email, options = {}) => User.findOne({
   where: {

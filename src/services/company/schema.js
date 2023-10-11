@@ -62,7 +62,7 @@ const schema = Joi.object({
       "number.positive": "userId should be a positive number"
     }),
   status: Joi.string()
-    .valid("pending", "approved", "denied")
+    .valid('pending', 'approved', 'denied')
     .optional()
     .messages({
       "string.base": "Status should be a string",
