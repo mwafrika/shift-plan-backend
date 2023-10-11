@@ -1,8 +1,7 @@
-"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Company", {
+    await queryInterface.createTable('Company', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,19 +24,11 @@ module.exports = {
         type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.ENUM("pending", "approved", "denied"),
-        defaultValue: "pending",
+        type: Sequelize.ENUM('pending', 'approved', 'denied'),
+        defaultValue: 'pending',
       },
       companyDescription: {
         type: Sequelize.TEXT,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "User",
-          key: "id",
-        },
-        allowNull: true,
       },
       companyPhone: {
         type: Sequelize.STRING,
@@ -58,7 +49,7 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Company");
+  async down(queryInterface) {
+    await queryInterface.dropTable('Company');
   },
 };

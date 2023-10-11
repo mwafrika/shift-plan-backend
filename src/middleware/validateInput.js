@@ -1,5 +1,5 @@
-import { StatusCodes } from "http-status-codes";
-import userSchema, { validateIdOnly } from "../services/auth/schema";
+import { StatusCodes } from 'http-status-codes';
+import userSchema, { validateIdOnly } from '../services/auth/schema';
 
 export const validateData = (req, res, next, data, validationSchema) => {
   const { error } = validationSchema.validate(data);
@@ -7,18 +7,12 @@ export const validateData = (req, res, next, data, validationSchema) => {
     const errorMessage = error.details[0].message;
     return res.status(StatusCodes.BAD_REQUEST).json({ error: errorMessage });
   }
-  next();
+  return next();
 };
 
 export const validateUserData = (req, res, next) => {
   const data = req.body;
   const validationSchema = userSchema;
-  validateData(req, res, next, data, validationSchema);
-};
-
-export const validateCompanyData = (req, res, next) => {
-  const data = req.body;
-  const validationSchema = schemaCompany;
   validateData(req, res, next, data, validationSchema);
 };
 

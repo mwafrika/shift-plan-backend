@@ -3,9 +3,9 @@ export const formatResponse = (
   statusCode,
   data = null,
   errorMessage = null,
-  options = {}
+  options = {},
 ) => {
-  const successMessage = "Success";
+  const successMessage = 'Success';
   res.status(statusCode);
   const response = {
     message: errorMessage || successMessage,
@@ -20,4 +20,11 @@ export const formatResponse = (
     response.order = options.order;
   }
   res.json(response);
+};
+
+export const formatError = (res, statusCode, errorMessage) => {
+  res.status(statusCode);
+  res.json({
+    error: errorMessage,
+  });
 };
