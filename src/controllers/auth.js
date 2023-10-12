@@ -79,7 +79,7 @@ export const login = async (req, res) => {
   const user = await findUserByEmail(email);
 
   if (!user)
-    return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "Invalid credentials");
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid)
@@ -87,7 +87,7 @@ export const login = async (req, res) => {
       res,
       StatusCodes.UNAUTHORIZED,
       null,
-      "Invalid password"
+      "Invalid credentials"
     );
 
   const token = generateToken(user);
