@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getCompanies } from "../../controllers/company";
+import { getAllCompanies } from "../../controllers/company";
 
 const router = Router()
-  .get("/", getCompanies)
+  .get("/", getAllCompanies)
 
 export default router;
