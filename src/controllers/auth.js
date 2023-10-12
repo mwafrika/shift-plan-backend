@@ -1,7 +1,17 @@
 import { StatusCodes } from "http-status-codes";
-import { findUserByEmail, createUser } from "../services/auth/auth.service";
+import {
+  findUserByEmail,
+  createUser,
+  findUserById,
+  updateUser,
+} from "../services/auth/auth.service";
 import { createCompany } from "../services/company/company.service";
-import { hashPassword, generateToken } from "../utils/auth";
+import {
+  hashPassword,
+  generateToken,
+  sendEmail,
+  isTokenExpired,
+} from "../utils/auth";
 import { formatResponse } from "../utils/format";
 
 export const register = async (req, res) => {
@@ -70,4 +80,58 @@ export const register = async (req, res) => {
       error.message
     );
   }
+};
+
+export const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await findUserByEmail(email);
+
+  if (!user) formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+
+  const token = generateToken(user);
+
+  const info = await sendEmail(
+    email,
+    "Password reset",
+    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`
+  );
+
+  return formatResponse(res, StatusCodes.OK, {
+    message: "Password reset email sent",
+    info,
+  });
+};
+
+export const resetPassword = async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  const user = await findUserById(id);
+
+  if (!user)
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+
+  const isTokenValid = isTokenExpired(token);
+
+  if (isTokenValid)
+    return formatResponse(res, StatusCodes.UNAUTHORIZED, null, "Token expired");
+
+  const hashedPassword = await hashPassword(password);
+
+  const updatedUser = await updateUser(id, {
+    password: hashedPassword,
+  });
+
+  if (!updatedUser)
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "Error updating user"
+    );
+
+  return formatResponse(res, StatusCodes.OK, {
+    message: "Password updated successfully",
+  });
 };

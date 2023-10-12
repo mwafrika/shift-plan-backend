@@ -1,12 +1,13 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Company extends Model {
     static associate(models) {
       Company.hasMany(models.User, {
-        foreignKey: "userId",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+        foreignKey: 'companyId',
+        as: 'users',
+        // onDelete: "CASCADE",
+        // onUpdate: "CASCADE",
       });
     }
   }
@@ -18,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       companyCity: DataTypes.STRING,
       companyCountry: DataTypes.STRING,
       status: {
-        type: DataTypes.ENUM("pending", "approved", "denied"),
-        defaultValue: "pending",
+        type: DataTypes.ENUM('pending', 'approved', 'denied'),
+        defaultValue: 'pending',
       },
       companyDescription: DataTypes.TEXT,
       companyPhone: DataTypes.STRING,
@@ -28,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Company",
+      modelName: 'Company',
       freezeTableName: true,
-    }
+    },
   );
   return Company;
 };
