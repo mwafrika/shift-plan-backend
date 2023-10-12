@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
 const setPort = (environment) => {
   if (environment === 'development') {
     return process.env.DEV_PORT || 5000;

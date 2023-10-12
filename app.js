@@ -1,13 +1,11 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import cors from "cors";
 import setPort from "./src/utils/manageEnv";
 import AuthRoutes from "./src/routes/auth";
 const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
 
 const app = express();
-
-dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

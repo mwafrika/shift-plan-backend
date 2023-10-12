@@ -1,18 +1,11 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Company extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Company.hasMany(models.User, {
-        foreignKey: 'companyId',
-        as: 'users',
-        // onDelete: "CASCADE",
-        // onUpdate: "CASCADE",
+        foreignKey: "companyId",
+        as: "users",
       });
     }
   }
@@ -24,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       companyCity: DataTypes.STRING,
       companyCountry: DataTypes.STRING,
       status: {
-        type: DataTypes.ENUM('pending', 'approved', 'denied'),
-        defaultValue: 'pending',
+        type: DataTypes.ENUM("pending", "approved", "denied"),
+        defaultValue: "pending",
       },
       companyDescription: DataTypes.TEXT,
       companyPhone: DataTypes.STRING,
@@ -34,9 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Company',
+      modelName: "Company",
       freezeTableName: true,
-    },
+    }
   );
   return Company;
 };
