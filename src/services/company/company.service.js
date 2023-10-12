@@ -14,13 +14,13 @@ export const findCompanyByPK = async (id, options = {}) => Company.findByPk(id, 
 
 export const findCompanyByName = async (name, options = {}) => Company.findOne({
   where: {
-    name,
+    name
   },
-  ...options,
+  ...options
 });
 
 export const deleteCompany = async (id) => Company.destroy({
   where: {
-    id,
-  },
+    id
+  }
 });
