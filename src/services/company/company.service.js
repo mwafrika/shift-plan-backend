@@ -1,6 +1,5 @@
-import { Company } from "../../database/models/index";
+import { Company } from '../../database/models/index';
 
-export const findAllCompanies = async (options = {}) =>
-  Company.findAll({
-    ...options,
-  });
+export const findAllCompanies = async (options = {}) => Company.findAll({
+  ...options,
+});
