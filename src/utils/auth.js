@@ -1,13 +1,6 @@
-<<<<<<< HEAD
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import nodeMailer from "nodemailer";
-=======
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import nodeMailer from 'nodemailer';
-import dotenv from 'dotenv';
->>>>>>> ff740b8 (fix linter)
 
 export const generateToken = (user) => {
   const token = jwt.sign(
