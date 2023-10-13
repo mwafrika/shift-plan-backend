@@ -1,4 +1,5 @@
 import { Company } from "../../database/models/index";
+
 export const findCompanyById = async (id, options = {}) =>
   Company.findOne({
     where: {

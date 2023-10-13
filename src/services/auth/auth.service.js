@@ -11,7 +11,7 @@ export const findUserByEmail = async (email, options = {}) =>
 export const findUserById = async (
   id,
   additionalConditions = {},
-  options = {}
+  options = {},
 ) =>
   User.findOne({
     where: {

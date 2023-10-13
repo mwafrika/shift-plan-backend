@@ -45,7 +45,7 @@ export const register = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error while creating user"
+        "Error while creating user",
       );
     }
     const responseUser = {
@@ -79,7 +79,7 @@ export const register = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -96,7 +96,7 @@ export const forgetPassword = async (req, res) => {
   const info = await sendEmail(
     email,
     "Password reset",
-    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`
+    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`,
   );
 
   return formatResponse(res, StatusCodes.OK, {
@@ -111,13 +111,15 @@ export const resetPassword = async (req, res) => {
 
   const user = await findUserById(id);
 
-  if (!user)
+  if (!user) {
     return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+  }
 
   const isTokenValid = isTokenExpired(token);
 
-  if (isTokenValid)
+  if (isTokenValid) {
     return formatResponse(res, StatusCodes.UNAUTHORIZED, null, "Token expired");
+  }
 
   const hashedPassword = await hashPassword(password);
 
@@ -125,13 +127,14 @@ export const resetPassword = async (req, res) => {
     password: hashedPassword,
   });
 
-  if (!updatedUser)
+  if (!updatedUser) {
     return formatResponse(
       res,
       StatusCodes.BAD_REQUEST,
       null,
-      "Error updating user"
+      "Error updating user",
     );
+  }
 
   return formatResponse(res, StatusCodes.OK, {
     message: "Password updated successfully",
@@ -143,7 +146,7 @@ export const getUsers = async (req, res) => {
   try {
     const users = await findAllUsers({
       where: {
-        companyId: companyId,
+        companyId,
       },
       attributes: [
         "id",
@@ -168,7 +171,7 @@ export const getUsers = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -195,7 +198,7 @@ export const getUser = async (req, res) => {
           "createdAt",
           "updatedAt",
         ],
-      }
+      },
     );
 
     if (!user) {
@@ -207,7 +210,7 @@ export const getUser = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -239,7 +242,7 @@ export const updateUserData = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error updating user"
+        "Error updating user",
       );
     }
 
@@ -252,7 +255,7 @@ export const updateUserData = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -275,7 +278,7 @@ export const deleteUserData = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error deleting user"
+        "Error deleting user",
       );
     }
 
@@ -287,7 +290,7 @@ export const deleteUserData = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -320,7 +323,7 @@ export const createUserData = async (req, res) => {
       res,
       StatusCodes.BAD_REQUEST,
       null,
-      "Error creating user"
+      "Error creating user",
     );
   }
 

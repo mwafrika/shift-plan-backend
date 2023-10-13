@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
         res,
         StatusCodes.UNAUTHORIZED,
         null,
-        "Authorization denied, no token provided"
+        "Authorization denied, no token provided",
       );
     }
 
@@ -25,7 +25,7 @@ const auth = (req, res, next) => {
       res,
       StatusCodes.UNAUTHORIZED,
       null,
-      "Authorization denied, invalid token"
+      "Authorization denied, invalid token",
     );
   }
 };

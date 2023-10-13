@@ -7,8 +7,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-      },
-      name: {
+      }, name: {
         type: Sequelize.STRING,
       },
       email: {
@@ -60,6 +59,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("User");
+    await queryInterface.dropTable('User');
   },
 };
