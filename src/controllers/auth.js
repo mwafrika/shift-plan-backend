@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error while creating user"
+        "Error while creating user",
       );
     }
     const responseUser = {
@@ -68,7 +68,7 @@ export const register = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -77,25 +77,18 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findUserByEmail(email);
 
-  if (!user) {
+  if (user) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (isPasswordValid){
+        const token = generateToken(user);
+        return formatResponse(res, StatusCodes.OK, { token });
+       }
+  }
+  
     return formatResponse(
       res,
       StatusCodes.UNAUTHORIZED,
       null,
       "Invalid credentials"
     );
-  }
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordValid) {
-    return formatResponse(
-      res,
-      StatusCodes.UNAUTHORIZED,
-      null,
-      "Invalid credentials"
-    );
-  }
-
-  const token = generateToken(user);
-  return formatResponse(res, StatusCodes.OK, { token });
 };
