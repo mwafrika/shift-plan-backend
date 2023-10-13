@@ -1,6 +1,6 @@
-"use strict";
 const { Model } = require("sequelize");
 const company = require("./company");
+
 module.exports = (sequelize, DataTypes) => {
   class Department extends Model {
     /**
@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       Department.hasMany(models.User, {
         foreignKey: "departmentId",
         onDelete: "SET NULL",
-        onUpdate: "SET NULL",
+        onUpdate: "SET NULL"
       });
 
       Department.belongsTo(models.Company, {
         foreignKey: "companyId",
         onDelete: "SET NULL",
-        onUpdate: "SET NULL",
+        onUpdate: "SET NULL"
       });
     }
   }
@@ -27,13 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       departmentName: DataTypes.STRING,
       departmentManager: DataTypes.STRING,
       departmentDescription: DataTypes.TEXT,
-      companyId: DataTypes.INTEGER,
+      companyId: DataTypes.INTEGER
     },
     {
       sequelize,
       modelName: "Department",
       freezeTableName: true
-    },
+    }
   );
   return Department;
 };

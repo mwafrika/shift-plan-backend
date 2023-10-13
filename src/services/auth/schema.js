@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const schema = Joi.object({
   name: Joi.string().min(6).max(30).required()
@@ -72,6 +72,7 @@ const schema = Joi.object({
       "string.min": "Country should have a minimum length of {#limit}",
       "string.max": "Country should have a maximum length of {#limit}"
     }),
+
   city: Joi.string().min(3).max(20).optional()
     .messages({
       "string.base": "City should be a string",
@@ -119,6 +120,7 @@ const schema = Joi.object({
       "string.base": "Phone should be a string",
       "string.pattern.base": "Phone should be a valid phone number"
     }),
+
   companyEmail: Joi.string()
     .email({ tlds: { allow: false } })
     .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
@@ -138,7 +140,7 @@ const schema = Joi.object({
       "number.positive": "companyId should be a positive number"
     }),
   status: Joi.string()
-    .valid('pending', 'approved', 'denied')
+    .valid("pending", "approved", "denied")
     .optional()
     .messages({
       "string.base": "Status should be a string",

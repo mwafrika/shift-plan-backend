@@ -4,7 +4,7 @@ import {
   getAllDepartment,
   createDepartment,
   updateDepartment,
-  getDepartmentById,
+  getDepartmentById
 } from "../services/department/department.service";
 import { formatResponse } from "../utils/format";
 
@@ -14,18 +14,18 @@ export const updateDepartmentById = async (req, res) => {
 
   const oldDepartment = await getDepartmentById(id);
 
-  if (!oldDepartment){
+  if (!oldDepartment) {
     return formatResponse(
       res,
       StatusCodes.NOT_FOUND,
       null,
-      "Department not found",
+      "Department not found"
     );
   }
 
   const UpdatedDepartment = await updateDepartment(
     oldDepartment.id,
-    newDepartment,
+    newDepartment
   );
 
   if (!UpdatedDepartment) {
@@ -33,48 +33,67 @@ export const updateDepartmentById = async (req, res) => {
       res,
       StatusCodes.NOT_FOUND,
       null,
-      "Unable to update department",
+      "Unable to update department"
     );
   }
 
   return formatResponse(res, StatusCodes.OK, {
-    message: "Department created successfully",
+    message: "Department updated successfully"
   });
 };
 
-export const createNewDepartment =async(req, res) => {
-    const { departmentName,
-      departmentManager,
-      departmentDescription,
-      companyId} = req.body
+export const createNewDepartment = async (req, res) => {
+  const {
+    departmentName,
+    departmentManager,
+    departmentDescription,
+    companyId
+  } = req.body;
 
-    const newDepartment = await createDepartment({
-      departmentName,
-      departmentManager,
-      departmentDescription,
-      companyId})
-    
-      if(newDepartment){
-        return formatResponse(
-          res, StatusCodes.CREATED, 
-          {message: "Department created successfully",
-          department: newDepartment,
-        })
-      }
-    
+  const newDepartment = await createDepartment({
+    departmentName,
+    departmentManager,
+    departmentDescription,
+    companyId
+  });
+
+  if (newDepartment) {
     return formatResponse(
-        res, StatusCodes.INTERNAL_SERVER_ERROR, 
-        {message: "Failed to create department ",
+      res,
+      StatusCodes.CREATED,
+      {
+        message: "Department created successfully",
+        department: newDepartment
       }
-    )
-}
+    );
+  }
 
-export const findAllDepartment = async(req, res) => {
+  return formatResponse(
+    res,
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    { message: "Failed to create department " }
+  );
+};
+
+export const findAllDepartment = async (req, res) => {
   const departments = await getAllDepartment();
-  if(departments){
+  if (departments) {
     return formatResponse(res, StatusCodes.OK, departments);
   }
-  return  formatResponse(res, StatusCodes.EXPECTATION_FAILED)
+  return formatResponse(res, StatusCodes.EXPECTATION_FAILED);
+};
 
-}
+export const removeDepartment = async (req, res) => {
+  const { id } = req.params;
+  const department = await deleteDepartment(id);
 
+  if (!department) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "Department not found"
+    );
+  }
+  return formatResponse(res, StatusCodes.OK, department);
+};
