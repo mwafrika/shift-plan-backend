@@ -7,8 +7,8 @@ module.exports = {
     host: process.env.POSTGRES_HOST,
     port: 5432,
     dialectOptions: {
-      bigNumberStrings: true,
-    },
+      bigNumberStrings: true
+    }
   },
   test: {
     username: process.env.TEST_DB_USERNAME,
@@ -18,8 +18,8 @@ module.exports = {
     host: process.env.TEST_DB_HOSTNAME,
     port: 5432,
     dialectOptions: {
-      bigNumberStrings: true,
-    },
+      bigNumberStrings: true
+    }
   },
   production: {
     username: process.env.PROD_DB_USERNAME,
@@ -29,7 +29,7 @@ module.exports = {
     port: process.env.PROD_DB_PORT,
     dialect: process.env.DB_DIALECT,
     dialectOptions: {
-      bigNumberStrings: true,
-    },
-  },
+      bigNumberStrings: true
+    }
+  }
 };

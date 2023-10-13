@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Company.hasMany(models.User, {
         foreignKey: "companyId",
-        as: "users",
+        as: "users"
       });
     }
   }
@@ -18,18 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       companyCountry: DataTypes.STRING,
       status: {
         type: DataTypes.ENUM("pending", "approved", "denied"),
-        defaultValue: "pending",
+        defaultValue: "pending"
       },
       companyDescription: DataTypes.TEXT,
       companyPhone: DataTypes.STRING,
       companyEmail: DataTypes.STRING,
-      logo: DataTypes.STRING,
+      logo: DataTypes.STRING
     },
     {
       sequelize,
       modelName: "Company",
-      freezeTableName: true,
-    },
+      freezeTableName: true
+    }
   );
   return Company;
 };

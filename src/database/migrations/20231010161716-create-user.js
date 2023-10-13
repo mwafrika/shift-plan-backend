@@ -1,6 +1,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize,) {
     await queryInterface.createTable("User", {
       id: {
         allowNull: false,
@@ -43,7 +43,7 @@ module.exports = {
       },
       isActive: {
         type: Sequelize.BOOLEAN,
-        values: [true, false],
+        values: [true, false,],
         defaultValue: false,
       },
       description: {
@@ -57,9 +57,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-    });
+    },);
   },
-  async down(queryInterface) {
-    await queryInterface.dropTable("User");
+  async down(queryInterface,) {
+    await queryInterface.dropTable("User",);
   },
 };

@@ -6,20 +6,21 @@ import {
   findUserById,
   updateUser,
   findAllUsers,
-  deleteUser,
+  deleteUser
 } from "../services/auth/auth.service";
 import { createCompany } from "../services/company/company.service";
 import {
   hashPassword,
   generateToken,
   sendEmail,
-  isTokenExpired,
+  isTokenExpired
 } from "../utils/auth";
 import { formatResponse } from "../utils/format";
 
 export const register = async (req, res) => {
-  const { email, password, name, companyName, companyAddress, companyPhone } =
-    req.body;
+  const {
+    email, password, name, companyName, companyAddress, companyPhone
+  } = req.body;
   try {
     const user = await findUserByEmail(email);
     if (user) {
@@ -31,14 +32,14 @@ export const register = async (req, res) => {
     const newCompany = await createCompany({
       companyAddress,
       companyName,
-      companyPhone,
+      companyPhone
     });
 
     const newUser = await createUser({
       email,
       password: hashedPassword,
       name,
-      companyId: newCompany.id,
+      companyId: newCompany.id
     });
 
     if (!newUser || !newCompany) {
@@ -46,7 +47,7 @@ export const register = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error while creating user",
+        "Error while creating user"
       );
     }
     const responseUser = {
@@ -55,7 +56,7 @@ export const register = async (req, res) => {
       name: newUser.name,
       companyId: newUser.companyId,
       createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt,
+      updatedAt: newUser.updatedAt
     };
 
     const responseCompany = {
@@ -64,7 +65,7 @@ export const register = async (req, res) => {
       address: newCompany.companyAddress,
       phone: newCompany.companyPhone,
       createdAt: newCompany.createdAt,
-      updatedAt: newCompany.updatedAt,
+      updatedAt: newCompany.updatedAt
     };
 
     const generatedToken = generateToken(newUser);
@@ -73,14 +74,14 @@ export const register = async (req, res) => {
       message: "Company created successfully",
       token: generatedToken,
       user: responseUser,
-      company: responseCompany,
+      company: responseCompany
     });
   } catch (error) {
     return formatResponse(
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
@@ -117,12 +118,12 @@ export const forgetPassword = async (req, res) => {
   const info = await sendEmail(
     email,
     "Password reset",
-    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`,
+    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`
   );
 
   return formatResponse(res, StatusCodes.OK, {
     message: "Password reset email sent",
-    info,
+    info
   });
 };
 
@@ -145,7 +146,7 @@ export const resetPassword = async (req, res) => {
   const hashedPassword = await hashPassword(password);
 
   const updatedUser = await updateUser(id, {
-    password: hashedPassword,
+    password: hashedPassword
   });
 
   if (!updatedUser) {
@@ -153,12 +154,12 @@ export const resetPassword = async (req, res) => {
       res,
       StatusCodes.BAD_REQUEST,
       null,
-      "Error updating user",
+      "Error updating user"
     );
   }
 
   return formatResponse(res, StatusCodes.OK, {
-    message: "Password updated successfully",
+    message: "Password updated successfully"
   });
 };
 
@@ -167,7 +168,7 @@ export const getUsers = async (req, res) => {
   try {
     const users = await findAllUsers({
       where: {
-        companyId,
+        companyId
       },
       attributes: [
         "id",
@@ -179,8 +180,8 @@ export const getUsers = async (req, res) => {
         "isActive",
         "profilePicture",
         "createdAt",
-        "updatedAt",
-      ],
+        "updatedAt"
+      ]
     });
 
     if (users.length === 0) {
@@ -192,7 +193,7 @@ export const getUsers = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
@@ -204,7 +205,7 @@ export const getUser = async (req, res) => {
     const user = await findUserById(
       id,
       {
-        companyId,
+        companyId
       },
       {
         attributes: [
@@ -217,9 +218,9 @@ export const getUser = async (req, res) => {
           "isActive",
           "profilePicture",
           "createdAt",
-          "updatedAt",
-        ],
-      },
+          "updatedAt"
+        ]
+      }
     );
 
     if (!user) {
@@ -231,18 +232,20 @@ export const getUser = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
 
 export const updateUserData = async (req, res) => {
   const { id, companyId } = req.params;
-  const { name, email, password, profilePicture } = req.body;
+  const {
+    name, email, password, profilePicture
+  } = req.body;
 
   try {
     const user = await findUserById(id, {
-      companyId,
+      companyId
     });
 
     if (!user) {
@@ -255,7 +258,7 @@ export const updateUserData = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      profilePicture,
+      profilePicture
     });
 
     if (!updatedUser) {
@@ -263,20 +266,20 @@ export const updateUserData = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error updating user",
+        "Error updating user"
       );
     }
 
     return formatResponse(res, StatusCodes.OK, {
       message: "User updated successfully",
-      updatedUser,
+      updatedUser
     });
   } catch (error) {
     return formatResponse(
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
@@ -285,7 +288,7 @@ export const deleteUserData = async (req, res) => {
   const { id, companyId } = req.params;
   try {
     const user = await findUserById(id, {
-      companyId,
+      companyId
     });
 
     if (!user) {
@@ -299,30 +302,33 @@ export const deleteUserData = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error deleting user",
+        "Error deleting user"
       );
     }
 
     return formatResponse(res, StatusCodes.OK, {
-      message: "User deleted successfully",
+      message: "User deleted successfully"
     });
   } catch (error) {
     return formatResponse(
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
 
 export const createUserData = async (req, res) => {
   const { companyId } = req.user;
-  const { name, email, password, profilePicture } = req.body;
+  const { id } = req.params;
+  const {
+    name, email, password, profilePicture
+  } = req.body;
 
   const user = await findUserById(id, {
     companyId,
-    email,
+    email
   });
 
   if (user) {
@@ -336,7 +342,7 @@ export const createUserData = async (req, res) => {
     email,
     password: hashedPassword,
     profilePicture,
-    companyId,
+    companyId
   });
 
   if (!newUser) {
@@ -344,7 +350,7 @@ export const createUserData = async (req, res) => {
       res,
       StatusCodes.BAD_REQUEST,
       null,
-      "Error creating user",
+      "Error creating user"
     );
   }
 
@@ -353,6 +359,6 @@ export const createUserData = async (req, res) => {
   return formatResponse(res, StatusCodes.CREATED, {
     message: "User created successfully",
     token,
-    newUser,
+    newUser
   });
 };

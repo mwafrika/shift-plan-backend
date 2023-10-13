@@ -3,13 +3,13 @@ export const formatResponse = (
   statusCode,
   data = null,
   errorMessage = null,
-  options = {},
+  options = {}
 ) => {
   const message = errorMessage || 'Success';
   res.status(statusCode);
   const response = {
     message,
-    data: data || null,
+    data: data || null
   };
 
   if (options.include) {
@@ -25,6 +25,6 @@ export const formatResponse = (
 export const formatError = (res, statusCode, errorMessage) => {
   res.status(statusCode);
   res.json({
-    error: errorMessage,
+    error: errorMessage
   });
 };

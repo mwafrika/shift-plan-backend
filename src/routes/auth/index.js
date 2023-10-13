@@ -7,7 +7,7 @@ import {
   getUsers,
   deleteUserData,
   updateUserData,
-  createUserData,
+  createUserData
 } from "../../controllers/auth";
 import { validateUserData, validateID } from "../../middleware/validateInput";
 import isAuthenticated from "../../middleware/authenticate.user";
