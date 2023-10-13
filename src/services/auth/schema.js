@@ -37,7 +37,7 @@ const schema = Joi.object({
       'boolean.base': 'isActive should be a boolean',
       'any.only': 'isActive should be either true or false',
     }),
-  profile_picture: Joi.string().optional().uri().messages({
+  ProfilePicture: Joi.string().optional().uri().messages({
     'string.base': 'Photo should be a string',
     'string.uri': 'Photo should be a valid uri',
   }),

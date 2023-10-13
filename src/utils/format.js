@@ -3,7 +3,7 @@ export const formatResponse = (
   statusCode,
   data = null,
   errorMessage = null,
-  options = {}
+  options = {},
 ) => {
   const message = errorMessage || "Success";
   res.status(statusCode);

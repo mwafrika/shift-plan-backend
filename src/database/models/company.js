@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       companyCity: DataTypes.STRING,
       companyCountry: DataTypes.STRING,
       status: {
-        type: DataTypes.ENUM("pending", "approved", "denied"),
-        defaultValue: "pending",
+        type: DataTypes.ENUM('pending', 'approved', 'denied'),
+        defaultValue: 'pending',
       },
       companyDescription: DataTypes.TEXT,
       companyPhone: DataTypes.STRING,
@@ -27,9 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Company",
+      modelName: 'Company',
       freezeTableName: true,
-    }
+    },
   );
   return Company;
 };

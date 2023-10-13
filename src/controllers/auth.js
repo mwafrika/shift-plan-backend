@@ -1,8 +1,8 @@
-import { StatusCodes } from "http-status-codes";
-import { findUserByEmail, createUser } from "../services/auth/auth.service";
-import { createCompany } from "../services/company/company.service";
-import { hashPassword, generateToken } from "../utils/auth";
-import { formatResponse } from "../utils/format";
+import { StatusCodes } from 'http-status-codes';
+import { findUserByEmail, createUser } from '../services/auth/auth.service';
+import { createCompany } from '../services/company/company.service';
+import { hashPassword, generateToken } from '../utils/auth';
+import { formatResponse } from '../utils/format';
 
 export const register = async (req, res) => {
   const { email, password, name, companyName, companyAddress, companyPhone } =
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error while creating user"
+        'Error while creating user',
       );
     }
     const responseUser = {
@@ -57,7 +57,7 @@ export const register = async (req, res) => {
     const generatedToken = generateToken(newUser);
 
     return formatResponse(res, StatusCodes.CREATED, {
-      message: "Company created successfully",
+      message: 'Company created successfully',
       token: generatedToken,
       user: responseUser,
       company: responseCompany,
@@ -67,7 +67,8 @@ export const register = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
+
