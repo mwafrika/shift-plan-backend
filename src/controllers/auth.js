@@ -1,18 +1,18 @@
-import { StatusCodes } from "http-status-codes";
-import bcrypt from "bcryptjs";
-import { findUserByEmail, createUser } from "../services/auth/auth.service";
-import { createCompany } from "../services/company/company.service";
-import { hashPassword, generateToken } from "../utils/auth";
-import { formatResponse } from "../utils/format";
-
+import { StatusCodes } from 'http-status-codes';
+import bcrypt from 'bcryptjs';
+import { findUserByEmail, createUser } from '../services/auth/auth.service';
+import { createCompany } from '../services/company/company.service';
+import { hashPassword, generateToken } from '../utils/auth';
+import { formatResponse } from '../utils/format';
 
 export const register = async (req, res) => {
-  const { email, password, name, companyName, companyAddress, companyPhone } =
-    req.body;
+  const {
+    email, password, name, companyName, companyAddress, companyPhone,
+  } = req.body;
   try {
     const user = await findUserByEmail(email);
     if (user) {
-      return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
+      return formatResponse(res, StatusCodes.CONFLICT, null, 'User exists');
     }
 
     const hashedPassword = await hashPassword(password);
@@ -35,7 +35,7 @@ export const register = async (req, res) => {
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Error while creating user"
+        'Error while creating user',
       );
     }
     const responseUser = {
@@ -59,7 +59,7 @@ export const register = async (req, res) => {
     const generatedToken = generateToken(newUser);
 
     return formatResponse(res, StatusCodes.CREATED, {
-      message: "Company created successfully",
+      message: 'Company created successfully',
       token: generatedToken,
       user: responseUser,
       company: responseCompany,
@@ -69,7 +69,7 @@ export const register = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message
+      error.message,
     );
   }
 };
@@ -78,17 +78,17 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findUserByEmail(email);
 
-  if (!user)
-    return formatResponse(res, StatusCodes.NOT_FOUND, null, "Invalid credentials");
+  if (!user) { return formatResponse(res, StatusCodes.NOT_FOUND, null, 'Invalid credentials'); }
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
-  if (!isPasswordValid)
+  if (!isPasswordValid) {
     return formatResponse(
       res,
       StatusCodes.UNAUTHORIZED,
       null,
-      "Invalid credentials"
+      'Invalid credentials',
     );
+  }
 
   const token = generateToken(user);
   return formatResponse(res, StatusCodes.OK, { token });
