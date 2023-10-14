@@ -102,7 +102,7 @@ export const login = async (req, res) => {
     res,
     StatusCodes.UNAUTHORIZED,
     null,
-    "Invalid credentials",
+    "Invalid credentials"
   );
 };
 

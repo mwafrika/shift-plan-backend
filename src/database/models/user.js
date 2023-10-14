@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsTo(models.Company, {
         foreignKey: "companyId",
-        as: "company",
+        as: "company"
       });
     }
   }
@@ -25,15 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         values: [true, false],
-        defaultValue: false,
+        defaultValue: false
       },
-      description: DataTypes.TEXT,
+      description: DataTypes.TEXT
     },
     {
       sequelize,
       modelName: "User",
-      freezeTableName: true,
-    },
+      freezeTableName: true
+    }
   );
   return User;
 };
