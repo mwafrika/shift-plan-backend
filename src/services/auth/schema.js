@@ -37,8 +37,8 @@ const schema = Joi.object({
       "any.only": "isActive should be either true or false",
     }),
   ProfilePicture: Joi.string().optional().uri().messages({
-    'string.base': 'Photo should be a string',
-    'string.uri': 'Photo should be a valid uri',
+    "string.base": "Photo should be a string",
+    "string.uri": "Photo should be a valid uri",
   }),
   phone: Joi.string()
     .pattern(/^\+?[0-9()\-\s]+$/)
