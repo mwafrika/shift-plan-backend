@@ -1,10 +1,11 @@
-import { Company } from '../../database/models/index';
+import { Company } from "../../database/models/index";
 
 export const findCompanyById = async (id, options = {}) => Company.findOne({
   where: {
-    id,
+    id
   },
-  ...options,
+  ...options
 });
+
 export const createCompany = async (company) => Company.create(company);
 export const getCompanyWhere = async (where) => Company.findOne({ where });
