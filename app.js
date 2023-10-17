@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import setPort from "./src/utils/manageEnv";
 import AuthRoutes from "./src/routes/auth";
+import absenceRoutes from "./src/routes/absence";
 
 const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
 
@@ -21,6 +22,7 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/absence", absenceRoutes);
 
 const environment = app.get("env");
 const PORT = setPort(environment);

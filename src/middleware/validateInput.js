@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import userSchema, { validateIdOnly } from "../services/auth/schema";
+import absenceSchema from "../services/absence/schema";
 
 export const validateData = (req, res, next, data, validationSchema) => {
   const { error } = validationSchema.validate(data);
@@ -20,4 +21,10 @@ export const validateID = (req, res, next) => {
   const { id } = req.params;
   const validationSchema = validateIdOnly;
   validateData(req, res, next, { id }, validationSchema);
+};
+
+export const validateAbsenceData = (req, res, next) => {
+  const data = req.body;
+  const validationSchema = absenceSchema;
+  validateData(req, res, next, data, validationSchema);
 };

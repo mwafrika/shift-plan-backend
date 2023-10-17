@@ -7,6 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "companyId",
         as: "company"
       });
+
+      User.hasMany(models.Absence, {
+        foreignKey: "UserId",
+        as: "users",
+        onDelete: "CASCADE",
+        onUpdate: "NULL"
+      });
     }
   }
   User.init(
