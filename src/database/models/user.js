@@ -1,11 +1,11 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.belongsTo(models.Company, {
-        foreignKey: 'companyId',
-        as: 'company',
+        foreignKey: "companyId",
+        as: "company"
       });
     }
   }
@@ -25,15 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         values: [true, false],
-        defaultValue: false,
+        defaultValue: false
       },
-      description: DataTypes.TEXT,
+      description: DataTypes.TEXT
     },
     {
       sequelize,
-      modelName: 'User',
-      freezeTableName: true,
-    },
+      modelName: "User",
+      freezeTableName: true
+    }
   );
   return User;
 };

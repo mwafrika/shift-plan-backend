@@ -11,5 +11,15 @@
         "sourceType": "module"
     },
     "rules": {
-    }
+        "indent": ["error", 2],
+        "no-tabs": "error",
+        "semi": "error",
+        "quotes": ["error", "double"],
+        "comma-dangle": ["error", "never"],
+        "object-curly-spacing": ["error", "always"],
+        "jsx-quotes": ["error", "prefer-double"],
+        "arrow-parens": ["error", "always"],
+        "linebreak-style": 0,
+        "no-useless-catch": "error"
+      }
 }

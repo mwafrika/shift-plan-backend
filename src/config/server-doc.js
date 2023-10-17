@@ -6,7 +6,7 @@ const swaggerDefinition = {
   info: {
     title: "SHIFT PLAN API",
     version: "1.0.0",
-    description: "WELCOME TO SHIFT PLAN API",
+    description: "WELCOME TO SHIFT PLAN API"
   },
   host: "localhost:5000", // Host (optional)
   basePath: "/api/v1", // Base path (optional)
@@ -21,14 +21,14 @@ const swaggerDefinition = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/User",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+                  $ref: "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   components: {
     schemas: {
@@ -36,24 +36,24 @@ const swaggerDefinition = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
+            type: "integer"
           },
           name: {
-            type: "string",
+            type: "string"
           },
           email: {
-            type: "string",
-          },
-        },
-      },
-    },
-  },
+            type: "string"
+          }
+        }
+      }
+    }
+  }
 };
 
 // Options for the swagger-jsdoc
 const options = {
   swaggerDefinition,
-  apis: ["../routes/*.js"], // Path to the API routes
+  apis: ["../routes/*.js"] // Path to the API routes
 };
 
 // Initialize swagger-jsdoc
