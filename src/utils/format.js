@@ -5,10 +5,10 @@ export const formatResponse = (
   errorMessage = null,
   options = {},
 ) => {
-  const message = errorMessage || "Success";
+  const message = errorMessage || 'Success';
   res.status(statusCode);
   const response = {
-    message: message,
+    message,
     data: data || null,
   };
 
