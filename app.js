@@ -1,10 +1,10 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import setPort from "./src/utils/manageEnv";
 import AuthRoutes from "./src/routes/auth";
-
-const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
+import swaggerDoc from "./docs";
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use("/api/v1/api-docs", swaggerUi.serve);
-app.get("/api/v1/api-docs", swaggerUi.setup(swaggerSpec, { explorer: true }));
+app.get("/api/v1/api-docs", swaggerUi.setup(swaggerDoc, { explorer: true }));
 
 app.get("/api/v1", (req, res) => {
   res.send({
