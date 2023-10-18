@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import userSchema, { validateIdOnly } from "../services/auth/schema";
+import shiftSchema from "../services/shift/shema";
 
 export const validateData = (req, res, next, data, validationSchema) => {
   const { error } = validationSchema.validate(data);
@@ -13,6 +14,12 @@ export const validateData = (req, res, next, data, validationSchema) => {
 export const validateUserData = (req, res, next) => {
   const data = req.body;
   const validationSchema = userSchema;
+  validateData(req, res, next, data, validationSchema);
+};
+
+export const validateShiftData = (req, res, next) => {
+  const data = req.body;
+  const validationSchema = shiftSchema;
   validateData(req, res, next, data, validationSchema);
 };
 

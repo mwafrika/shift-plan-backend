@@ -49,75 +49,10 @@ const userSchema = {
 
 const userApiArr = [
   {
-    path: "/api/v1/auth/profile",
-    respondWith: {
-      tag: ["User"],
-      get: {
-        tags: ["User"],
-        parameters: [
-          {
-            name: "token",
-            in: "header",
-            type: "string",
-            required: true
-          }
-        ],
-        description: "Get Currently Logged in User",
-        responses: {
-          200: {
-            description: "Profile fetched Successfully"
-          },
-          404: {
-            description: "Profile not found"
-          }
-        }
-      }
-    }
-  },
-  {
-    path: "/api/v1/auth/forget-password",
+    path: "/auth/reset-password/:id/:token",
     respondWith: {
       post: {
-        tags: ["User"],
-        description: "Forget Password",
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  email: {
-                    type: "string",
-                    example: "mwafrikajosue@gmail.com",
-                    required: true
-                  }
-                }
-              }
-            }
-          }
-        },
-        responses: {
-          200: {
-            description: "Email sent Successfully"
-          },
-          404: {
-            description: "Email not found"
-          },
-          417: {
-            description: "Please fill in the required fields"
-          },
-          500: {
-            description: "Internal server error"
-          }
-        }
-      }
-    }
-  },
-  {
-    path: "/reset-password/:id/:token",
-    respondWith: {
-      post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         description: "Reset Password",
         parameters: [
           {
@@ -157,6 +92,70 @@ const userApiArr = [
           },
           404: {
             description: "User not found"
+          },
+          417: {
+            description: "Please fill in the required fields"
+          },
+          500: {
+            description: "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  {
+    path: "/auth/profile",
+    respondWith: {
+      get: {
+        tags: ["Authentication"],
+        parameters: [
+          {
+            name: "token",
+            in: "header",
+            type: "string",
+            required: true
+          }
+        ],
+        description: "Get Currently Logged in User",
+        responses: {
+          200: {
+            description: "Profile fetched Successfully"
+          },
+          404: {
+            description: "Profile not found"
+          }
+        }
+      }
+    }
+  },
+  {
+    path: "/auth/forget-password",
+    respondWith: {
+      post: {
+        tags: ["Authentication"],
+        description: "Forget Password",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                    example: "mwafrikajosue@gmail.com",
+                    required: true
+                  }
+                }
+              }
+            }
+          }
+        },
+        responses: {
+          200: {
+            description: "Email sent Successfully"
+          },
+          404: {
+            description: "Email not found"
           },
           417: {
             description: "Please fill in the required fields"
@@ -272,8 +271,8 @@ const userApiArr = [
     path: "/users/{id}/company",
     respondWith: {
       patch: {
-        tags: ["User"],
-        summary: "Approve a Company",
+        tags: ["Company"],
+        summary: "Approve or deny a Company",
         description: "Approves a company for a user by their ID.",
         parameters: [
           {
@@ -316,10 +315,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/admin/roles",
+    path: "/roles",
     respondWith: {
       get: {
-        tags: ["Admin"],
+        tags: ["Role"],
         summary: "Get All Roles",
         description: "Retrieve a list of all roles by an admin.",
         parameters: [
@@ -346,10 +345,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/api/v1/auth/register",
+    path: "/auth/register",
     respondWith: {
       post: {
-        tags: ["User"],
+        tags: ["Authentication"],
         description: "Register a User",
 
         requestBody: {
@@ -371,10 +370,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/admin/roles/{id}",
+    path: "/roles/{id}",
     respondWith: {
       get: {
-        tags: ["Admin"],
+        tags: ["Role"],
         summary: "Get Role by ID",
         description: "Retrieve a role by its unique ID.",
         parameters: [
@@ -408,10 +407,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/admin/users/{id}",
+    path: "/users/{id}",
     respondWith: {
       delete: {
-        tags: ["Admin"],
+        tags: ["User"],
         summary: "Delete User by ID",
         description: "Delete a user by their unique ID.",
         parameters: [
@@ -445,10 +444,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/admin/roles",
+    path: "/roles",
     respondWith: {
       post: {
-        tags: ["Admin"],
+        tags: ["Role"],
         summary: "Create a Role",
         description: "Create a new role with the provided details.",
         parameters: [
@@ -497,10 +496,10 @@ const userApiArr = [
     }
   },
   {
-    path: "/admin/users/:id",
+    path: "/users/:id",
     respondWith: {
       patch: {
-        tags: ["Admin"],
+        tags: ["User"],
         summary: "Update a User",
         description: "Update user details with the provided information.",
         parameters: [
@@ -569,10 +568,75 @@ const userApiArr = [
     }
   },
   {
-    path: "/user/login",
+    path: "/users",
     respondWith: {
       post: {
         tags: ["User"],
+        summary: "Create a User",
+        description: "Create user details with the provided information.",
+        parameters: [
+          {
+            name: "token",
+            in: "header",
+            type: "string",
+            required: true,
+            description: "Admin's authentication token"
+          }
+        ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    example: "Created Name",
+                    description: "Created name of the user"
+                  },
+                  email: {
+                    type: "string",
+                    example: "created@example.com",
+                    description: "Created email address"
+                  },
+                  password: {
+                    type: "string",
+                    example: "123456",
+                    description: "Created password"
+                  },
+                  profilePicture: {
+                    type: "string",
+                    example: "profilePicture",
+                    description: "Created profilePicture"
+                  }
+                  // Include other fields to update as needed
+                }
+              }
+            }
+          }
+        },
+        responses: {
+          200: {
+            description: "User created successfully"
+          },
+          400: {
+            description: "Invalid input"
+          },
+          403: {
+            description: "Access denied (admin privileges required)"
+          },
+          404: {
+            description: "User not found"
+          }
+        }
+      }
+    }
+  },
+  {
+    path: "/auth/login",
+    respondWith: {
+      post: {
+        tags: ["Authentication"],
         description:
           "Logs in the User (For Admin credentials, use email : admin@example.com, password : 1234567)",
 
@@ -599,8 +663,13 @@ const userApiArr = [
   }
 ];
 
-userApiArr.forEach((api) => {
-  userApiObject[api.path] = api.respondWith;
+userApiArr.forEach((shift) => {
+  const { path, respondWith } = shift;
+  const method = Object.keys(respondWith)[0];
+  if (!userApiObject[path]) {
+    userApiObject[path] = {};
+  }
+  userApiObject[path][method] = respondWith[method];
 });
 
 export default userApiObject;
