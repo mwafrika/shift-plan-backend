@@ -6,7 +6,8 @@ export const generateToken = (user) => {
   const token = jwt.sign(
     {
       id: user.id,
-      email: user.email
+      email: user.email,
+      companyId: user.companyId
     },
     process.env.JWT_SECRET,
     {

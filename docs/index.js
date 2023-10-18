@@ -1,3 +1,4 @@
+import shiftApiObject from "./shiftDoc";
 import userApiObject from "./userDoc";
 
 const swaggerConfig = {
@@ -14,7 +15,7 @@ const swaggerConfig = {
       description: process.env.DESCRIPTION
     }
   ],
-  paths: { ...userApiObject }
+  paths: { ...userApiObject, ...shiftApiObject }
 };
 
 export default swaggerConfig;
