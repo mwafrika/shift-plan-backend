@@ -115,10 +115,12 @@ export const updateShiftController = async (req, res) => {
       );
     }
 
+    const data = await findShiftById(id);
+
     return formatResponse(
       res,
       StatusCodes.OK,
-      updatedShift,
+      data,
       "Shift updated successfully"
     );
   } catch (error) {

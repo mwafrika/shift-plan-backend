@@ -181,7 +181,8 @@ export const getUsers = async (req, res) => {
         "profilePicture",
         "createdAt",
         "updatedAt"
-      ]
+      ],
+      include: "shifts"
     });
 
     if (users.length === 0) {

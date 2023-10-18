@@ -14,6 +14,11 @@ const router = Router()
   .get("/:id", validateID, isAuthenticated, getUser)
   .post("/", validateUserData, createUserData, createUserData)
   .patch("/:id", validateID, isAuthenticated, updateUserData)
-  .delete("/:id", validateID, isAuthenticated, deleteUserData);
+  .delete(
+    "/:id/company/:companyId",
+    validateID,
+    isAuthenticated,
+    deleteUserData
+  );
 
 export default router;

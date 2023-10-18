@@ -33,12 +33,6 @@ const shiftSchema = Joi.object({
     .required()
     .messages({
       "string.pattern.base": "Invalid time format (HH:mm)"
-    })
-    .when("startTime", {
-      is: Joi.exist(),
-      then: Joi.string().max(Joi.ref("startTime")).messages({
-        "string.max": "End time cannot be greater than start time"
-      })
     }),
   userId: Joi.number().integer().positive().optional()
     .messages({
