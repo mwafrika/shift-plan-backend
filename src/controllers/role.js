@@ -2,18 +2,18 @@ import { StatusCodes } from "http-status-codes";
 import {
   findAllRoles,
   findRoleById,
-  findRoleByPK,
   findRoleByName,
   createRole,
   updateRole,
-  deleteRole,
-} from "../../services/auth/role.service";
-import { formatResponse } from "../../utils/format";
+  deleteRole
+} from "../services/auth/role.service";
+import { formatResponse } from "../utils/format";
 
 export const getRoles = async (req, res) => {
   const roles = await findAllRoles();
-  if (roles.length === 0)
-    formatResponse(res, StatusCodes.NOT_FOUND, null, "No roles found");
+  if (roles.length === 0) {
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "No roles found");
+  }
   return formatResponse(res, StatusCodes.OK, roles);
 };
 
@@ -21,8 +21,9 @@ export const getRole = async (req, res) => {
   const { id } = req.params;
   const role = await findRoleById(id);
 
-  if (!role)
+  if (!role) {
     return formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+  }
   return formatResponse(res, StatusCodes.OK, role);
 };
 
@@ -34,7 +35,7 @@ export const createNewRole = async (req, res) => {
       res,
       StatusCodes.CONFLICT,
       null,
-      "Role already exists",
+      "Role already exists"
     );
   }
 
@@ -46,11 +47,13 @@ export const updateExistingRole = async (req, res) => {
   try {
     const { id } = req.params;
     const role = await findRoleById(id);
-    if (!role)
-      formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+    if (!role) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+    }
     const updatedRole = await updateRole(id, req.body);
-    if (!updatedRole)
-      formatResponse(res, StatusCodes.BAD_REQUEST, null, "Role not updated");
+    if (!updatedRole) {
+      return formatResponse(res, StatusCodes.BAD_REQUEST, null, "Role not updated");
+    }
     const updatedRoleData = await findRoleById(id);
     return formatResponse(res, StatusCodes.OK, updatedRoleData);
   } catch (error) {
@@ -58,7 +61,7 @@ export const updateExistingRole = async (req, res) => {
       res,
       StatusCodes.INTERNAL_SERVER_ERROR,
       null,
-      error.message,
+      error.message
     );
   }
 };
@@ -66,8 +69,9 @@ export const updateExistingRole = async (req, res) => {
 export const deleteExistingRole = async (req, res) => {
   const { id } = req.params;
   const role = await findRoleById(id);
-  if (!role)
+  if (!role) {
     return formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+  }
   await deleteRole(id);
   return formatResponse(res, StatusCodes.OK, null, "Role deleted");
 };
