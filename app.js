@@ -4,6 +4,8 @@ import cors from "cors";
 import setPort from "./src/utils/manageEnv";
 import AuthRoutes from "./src/routes/auth";
 import CompanyRoutes from "./src/routes/company";
+
+
 const { swaggerUi, swaggerSpec } = require("./src/config/server-doc");
 
 const app = express();
@@ -16,7 +18,7 @@ app.get("/api/v1/api-docs", swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 app.get("/api/v1", (req, res) => {
   res.send({
-    message: "Welcome to shift plan",
+    message: "Welcome to shift plan"
   });
 });
 

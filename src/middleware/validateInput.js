@@ -1,5 +1,5 @@
-import { StatusCodes } from 'http-status-codes';
-import userSchema, { validateIdOnly } from '../services/auth/schema';
+import { StatusCodes } from "http-status-codes";
+import userSchema, { validateIdOnly } from "../services/auth/schema";
 
 export const validateData = (req, res, next, data, validationSchema) => {
   const { error } = validationSchema.validate(data);
