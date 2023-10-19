@@ -17,7 +17,12 @@ const auth = (req, res, next) => {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = { id: decodedToken?.id, email: decodedToken?.email };
+    req.user = {
+      id: decodedToken?.id,
+      email: decodedToken?.email,
+      companyId: decodedToken?.companyId,
+      role: decodedToken?.role.name || decodedToken?.role
+    };
 
     return next();
   } catch (error) {

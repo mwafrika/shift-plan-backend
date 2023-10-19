@@ -88,13 +88,15 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await findUserByEmail(email);
+  const user = await findUserByEmail(email, {
+    include: "role"
+  });
 
   if (user) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       const token = generateToken(user);
-      return formatResponse(res, StatusCodes.OK, { token });
+      return formatResponse(res, StatusCodes.OK, { token }, "Login successful");
     }
   }
 
@@ -118,7 +120,7 @@ export const forgetPassword = async (req, res) => {
   const info = await sendEmail(
     email,
     "Password reset",
-    `Click on the link to reset your password: http://localhost:3000/reset-password/${user.id}/${token}`
+    `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.id}/${token}`
   );
 
   return formatResponse(res, StatusCodes.OK, {
@@ -181,7 +183,8 @@ export const getUsers = async (req, res) => {
         "profilePicture",
         "createdAt",
         "updatedAt"
-      ]
+      ],
+      include: "shifts"
     });
 
     if (users.length === 0) {

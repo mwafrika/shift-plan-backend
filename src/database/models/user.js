@@ -7,6 +7,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "companyId",
         as: "company"
       });
+      User.hasMany(models.Shift, {
+        foreignKey: "userId",
+        as: "shifts"
+      });
+
+      User.belongsTo(models.Role, {
+        foreignKey: "roleId",
+        as: "role"
+      });
     }
   }
   User.init(
