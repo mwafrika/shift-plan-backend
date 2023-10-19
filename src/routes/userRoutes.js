@@ -8,16 +8,36 @@ import {
 } from "../controllers/auth";
 import { validateUserData, validateID } from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
+import permit from "../middleware/permission";
 
 const router = Router()
-  .get("/", isAuthenticated, getUsers)
-  .get("/:id", validateID, isAuthenticated, getUser)
-  .post("/", validateUserData, createUserData, createUserData)
-  .patch("/:id", validateID, isAuthenticated, updateUserData)
+  .get("/", isAuthenticated, permit("admin", "superAdmin", "manager"), getUsers)
+  .get(
+    "/:id",
+    isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    validateID,
+    getUser
+  )
+  .post(
+    "/",
+    isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    validateUserData,
+    createUserData
+  )
+  .patch(
+    "/:id",
+    isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    validateID,
+    updateUserData
+  )
   .delete(
     "/:id/company/:companyId",
-    validateID,
     isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    validateID,
     deleteUserData
   );
 

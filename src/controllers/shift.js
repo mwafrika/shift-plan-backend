@@ -7,12 +7,26 @@ import {
   updateShift
 } from "../services/shift/shift.service";
 import { formatResponse } from "../utils/format";
+import { findUserById } from "../services/auth/auth.service";
 
 export const createShiftController = async (req, res) => {
   try {
-    const { body } = req;
+    const {
+      employee, startDate, endDate, startTime, endTime, userId
+    } = req.body;
+    const user = await findUserById(userId);
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+    }
 
-    const shift = await createShift(body);
+    const shift = await createShift({
+      employee,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      userId
+    });
 
     if (!shift) {
       return formatResponse(

@@ -20,7 +20,8 @@ const auth = (req, res, next) => {
     req.user = {
       id: decodedToken?.id,
       email: decodedToken?.email,
-      companyId: decodedToken?.companyId
+      companyId: decodedToken?.companyId,
+      role: decodedToken?.role.name || decodedToken?.role
     };
 
     return next();

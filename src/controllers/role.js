@@ -12,7 +12,7 @@ import { formatResponse } from "../utils/format";
 export const getRoles = async (req, res) => {
   const roles = await findAllRoles();
   if (roles.length === 0) {
-    formatResponse(res, StatusCodes.NOT_FOUND, null, "No roles found");
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "No roles found");
   }
   return formatResponse(res, StatusCodes.OK, roles);
 };
@@ -48,11 +48,11 @@ export const updateExistingRole = async (req, res) => {
     const { id } = req.params;
     const role = await findRoleById(id);
     if (!role) {
-      formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
+      return formatResponse(res, StatusCodes.NOT_FOUND, null, "Role not found");
     }
     const updatedRole = await updateRole(id, req.body);
     if (!updatedRole) {
-      formatResponse(res, StatusCodes.BAD_REQUEST, null, "Role not updated");
+      return formatResponse(res, StatusCodes.BAD_REQUEST, null, "Role not updated");
     }
     const updatedRoleData = await findRoleById(id);
     return formatResponse(res, StatusCodes.OK, updatedRoleData);

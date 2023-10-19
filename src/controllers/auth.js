@@ -88,7 +88,9 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await findUserByEmail(email);
+  const user = await findUserByEmail(email, {
+    include: "role"
+  });
 
   if (user) {
     const isPasswordValid = await bcrypt.compare(password, user.password);

@@ -7,12 +7,26 @@ import {
   deleteExistingRole
 } from "../controllers/role";
 import { validateID } from "../middleware/validateInput";
+import permit from "../middleware/permission";
+import auth from "../middleware/authenticate.user";
 
 const router = Router()
-  .get("/", getRoles)
-  .get("/:id", getRole)
-  .post("/", createNewRole)
-  .patch("/:id", updateExistingRole)
-  .delete("/:id", validateID, deleteExistingRole);
+  .get("/", auth, permit("admin", "superAdmin"), getRoles)
+  .get("/:id", auth, permit("admin", "superAdmin"), validateID, getRole)
+  .post("/", auth, permit("admin", "superAdmin"), createNewRole)
+  .patch(
+    "/:id",
+    auth,
+    permit("admin", "superAdmin"),
+    validateID,
+    updateExistingRole
+  )
+  .delete(
+    "/:id",
+    auth,
+    permit("admin", "superAdmin"),
+    validateID,
+    deleteExistingRole
+  );
 
 export default router;
