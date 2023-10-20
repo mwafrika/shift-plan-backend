@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const schema = Joi.object({
+export const schemaCompany = Joi.object({
   companyName: Joi.string().min(6).max(30).required()
     .messages({
       "string.base": "Name should be a string",
@@ -97,4 +97,3 @@ export const StatusSchema = Joi.object({
       "string.valid": "Status should be either pending, approved or denied"
     })
 });
-export default schema;

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const schema = Joi.object({
+const departmentSchema = Joi.object({
   departmentName: Joi.string().min(6).max(30).required()
     .messages({
       "string.base": "Name should be a string",
@@ -44,4 +44,4 @@ export const validateIdOnly = Joi.object({
     })
 });
 
-export default schema;
+export default departmentSchema;

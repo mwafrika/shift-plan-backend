@@ -71,6 +71,15 @@ export const getAllCompanies = async (req, res) => {
       "updatedAt"
     ]
   });
+
+  if (companies.length === 0) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "No companies found"
+    );
+  }
   return formatResponse(res, StatusCodes.OK, companies);
 };
 
