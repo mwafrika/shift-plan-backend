@@ -6,7 +6,7 @@ import {
   updateUserData,
   createUserData
 } from "../controllers/auth";
-import { validateUserData, validateID } from "../middleware/validateInput";
+import { validateID, validateUserInfo } from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
 import permit from "../middleware/permission";
 
@@ -23,7 +23,7 @@ const router = Router()
     "/",
     isAuthenticated,
     permit("admin", "superAdmin", "manager"),
-    validateUserData,
+    validateUserInfo,
     createUserData
   )
   .patch(
@@ -34,7 +34,7 @@ const router = Router()
     updateUserData
   )
   .delete(
-    "/:id/company/:companyId",
+    "/:id/company",
     isAuthenticated,
     permit("admin", "superAdmin", "manager"),
     validateID,

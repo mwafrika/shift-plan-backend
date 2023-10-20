@@ -36,3 +36,5 @@ export const deleteUser = async (id) => User.destroy({
     id
   }
 });
+
+export const findUserWhere = async (where) => User.findOne({ where });
