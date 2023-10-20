@@ -28,3 +28,9 @@ export const validateID = (req, res, next) => {
   const validationSchema = validateIdOnly;
   validateData(req, res, next, { id }, validationSchema);
 };
+
+export const validateDepartmentData = (req, res, next) => {
+  const data = req.body;
+  const validationSchema = departmentSchema;
+  validateData(req, res, next, data, validationSchema);
+};
