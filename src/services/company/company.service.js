@@ -32,3 +32,6 @@ export const deleteCompany = async (id) => Company.destroy({
     id
   }
 });
+export const findAllCompanies = async (options = {}) => Company.findAll({
+  ...options
+});
