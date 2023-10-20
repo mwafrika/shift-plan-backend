@@ -1,7 +1,16 @@
 import { Router } from "express";
-import { updateCompanyById } from "../controllers/company";
+import {
+  updateCompanyById,
+  getCompany,
+  deleteExistingCompany
+} from "../controllers/company";
 import { validateID } from "../middleware/validateInput";
+import permit from "../middleware/permission";
+import auth from "../middleware/authenticate.user";
 
-const router = Router().patch("/:id", validateID, updateCompanyById);
+const router = Router()
+  .get("/:id", auth, permit("superAdmin"), validateID, getCompany)
+  .delete("/:id", auth, permit("superAdmin"), validateID, deleteExistingCompany)
+  .patch("/:id", validateID, updateCompanyById);
 
 export default router;
