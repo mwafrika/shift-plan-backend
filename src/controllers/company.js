@@ -11,12 +11,12 @@ export const updateCompanyById = async (req, res) => {
   const editCompany = req.body;
 
   const oldCompany = await findCompanyById(id);
+  console.log(oldCompany.id);
   if (!oldCompany) {
     return formatResponse(
       res,
       StatusCodes.NOT_FOUND,
       null,
-
       "Company not found"
     );
   }

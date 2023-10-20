@@ -42,7 +42,6 @@ export const sendEmail = async (email, subject, text) => {
     console.log(error);
   }
 };
-
 export const isTokenExpired = (token) => {
   try {
     const decoded = jwt.decode(token, { complete: true });

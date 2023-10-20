@@ -37,7 +37,6 @@ const schema = Joi.object({
       "string.min": "Description should have a minimum length of {#limit}",
       "string.max": "Description should have a maximum length of {#limit}"
     }),
-
   companyEmail: Joi.string()
     .email({ tlds: { allow: false } })
     .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
@@ -87,5 +86,4 @@ export const validateIdOnly = Joi.object({
       "any.required": "Id is a required field"
     })
 });
-
 export default schema;

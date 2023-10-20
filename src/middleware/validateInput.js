@@ -34,7 +34,7 @@ export const validateDepartmentData = (req, res, next) => {
   const data = req.body;
   const validationSchema = departmentSchema;
   validateData(req, res, next, data, validationSchema);
-}
+};
 
 export const validateUserInfo = (req, res, next) => {
   const data = req.body;
