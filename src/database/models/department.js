@@ -1,5 +1,4 @@
 const { Model } = require("sequelize");
-const company = require("./company");
 
 module.exports = (sequelize, DataTypes) => {
   class Department extends Model {

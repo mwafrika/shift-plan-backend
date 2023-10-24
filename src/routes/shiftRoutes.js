@@ -4,7 +4,8 @@ import {
   updateShiftController,
   deleteShiftController,
   getAllShiftsController,
-  getShiftByIdController
+  getShiftByIdController,
+  assignShiftToUsers
 } from "../controllers/shift";
 import { validateShiftData, validateID } from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
@@ -44,6 +45,13 @@ const router = Router()
     permit("admin", "superAdmin", "manager", "employee"),
     validateID,
     getShiftByIdController
+  )
+  .post(
+    "/:shiftId/users/:userId/assign",
+    isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    // validateID,
+    assignShiftToUsers
   );
 
 export default router;

@@ -11,7 +11,7 @@ const departmentSchema = Joi.object({
     }),
 
   departmentManager: Joi.string().min(3).max(30).optional()
-    .message({
+    .messages({
       "string.base": "Manager should be a string",
       "string.empty": "Manager cannot be empty",
       "string.min": "Manager should have a minimum length of {#limit}",

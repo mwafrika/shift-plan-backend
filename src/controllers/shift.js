@@ -4,28 +4,31 @@ import {
   deleteShift,
   findShiftById,
   findAllShifts,
-  updateShift
+  updateShift,
+  assignShiftToEmployee
 } from "../services/shift/shift.service";
 import { formatResponse } from "../utils/format";
 import { findUserById } from "../services/auth/auth.service";
+import { findCompanyById } from "../services/company/company.service";
+// import users model
+import { User, Shift, EmployeeShift } from "../database/models/index";
 
 export const createShiftController = async (req, res) => {
   try {
     const {
-      employee, startDate, endDate, startTime, endTime, userId
+      employee, startDate, endDate, startTime, endTime
     } = req.body;
-    const user = await findUserById(userId);
-    if (!user) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
-    }
+    // const user = await findUserById(userId);
+    // if (!user) {
+    //   return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+    // }
 
     const shift = await createShift({
       employee,
       startDate,
       endDate,
       startTime,
-      endTime,
-      userId
+      endTime
     });
 
     if (!shift) {
@@ -51,8 +54,26 @@ export const createShiftController = async (req, res) => {
 };
 
 export const getAllShiftsController = async (req, res) => {
+  const { companyId } = req.user;
+
+  const isAllowed = findCompanyById(companyId);
+
   try {
-    const shifts = await findAllShifts();
+    if (!isAllowed) {
+      return formatResponse(
+        res,
+        StatusCodes.UNAUTHORIZED,
+        null,
+        "You are not allowed to view shifts"
+      );
+    }
+
+    const shifts = await findAllShifts(
+      {},
+      {
+        include: "employees"
+      }
+    );
 
     if (!shifts) {
       return formatResponse(
@@ -174,6 +195,49 @@ export const deleteShiftController = async (req, res) => {
       StatusCodes.OK,
       null,
       "Shift deleted successfully"
+    );
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: error.message
+    });
+  }
+};
+
+export const assignShiftToUsers = async (req, res) => {
+  try {
+    const { userId, shiftId } = req.params;
+    const user = await findUserById(userId);
+    const shift = await findShiftById(shiftId);
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+    }
+
+    if (!shift) {
+      return formatResponse(
+        res,
+        StatusCodes.NOT_FOUND,
+        null,
+        "Shift not found"
+      );
+    }
+
+    const newShift = await assignShiftToEmployee({ userId, shiftId });
+
+    if (!newShift) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Unable to assign shift"
+      );
+    }
+
+    return formatResponse(
+      res,
+      StatusCodes.OK,
+      newShift,
+      "Shift assigned successfully"
     );
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

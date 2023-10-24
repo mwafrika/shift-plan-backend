@@ -20,6 +20,7 @@
         "jsx-quotes": ["error", "prefer-double"],
         "arrow-parens": ["error", "always"],
         "linebreak-style": 0,
-        "no-useless-catch": "error"
+        "no-useless-catch": "error",
+        "import/no-extraneous-dependencies": "off"
       }
 }

@@ -3,10 +3,17 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Shift extends Model {
     static associate(models) {
-      Shift.belongsTo(models.User, {
-        foreignKey: "userId",
-        as: "user",
-        onDelete: "CASCADE"
+      Shift.belongsToMany(models.User, {
+        through: models.EmployeeShift,
+        foreignKey: "shiftId",
+        otherKey: "userId",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+      });
+
+      Shift.hasMany(models.EmployeeShift, {
+        foreignKey: "shiftId",
+        as: "employees"
       });
     }
   }
@@ -16,8 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       startDate: DataTypes.DATE,
       endDate: DataTypes.DATE,
       startTime: DataTypes.STRING,
-      endTime: DataTypes.STRING,
-      userId: DataTypes.INTEGER
+      endTime: DataTypes.STRING
     },
     {
       sequelize,
