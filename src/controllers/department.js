@@ -50,29 +50,37 @@ export const createNewDepartment = async (req, res) => {
     companyId
   } = req.body;
 
-  const newDepartment = await createDepartment({
-    departmentName,
-    departmentManager,
-    departmentDescription,
-    companyId
-  });
+  try {
+    const newDepartment = await createDepartment({
+      departmentName,
+      departmentManager,
+      departmentDescription,
+      companyId
+    });
 
-  if (newDepartment) {
+    if (!newDepartment) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Unable to create department"
+      );
+    }
+
     return formatResponse(
       res,
       StatusCodes.CREATED,
-      {
-        message: "Department created successfully",
-        department: newDepartment
-      }
+      newDepartment,
+      "Department created successfully"
+    );
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      error.message
     );
   }
-
-  return formatResponse(
-    res,
-    StatusCodes.INTERNAL_SERVER_ERROR,
-    { message: "Failed to create department " }
-  );
 };
 
 export const findAllDepartment = async (req, res) => {

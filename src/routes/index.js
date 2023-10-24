@@ -5,6 +5,7 @@ import UserRoutes from "./userRoutes";
 import RoleRoutes from "./roleRoutes";
 import DepartmentRoutes from "./departmentRoutes";
 import CompanyRoutes from "./companyRoutes";
+import Absence from "./absence";
 
 const router = Router()
   .use("/auth", AuthRoutes)
@@ -12,6 +13,7 @@ const router = Router()
   .use("/users", UserRoutes)
   .use("/roles", RoleRoutes)
   .use("/departments", DepartmentRoutes)
-  .use("/companies", CompanyRoutes);
+  .use("/companies", CompanyRoutes)
+  .use("/absences", Absence);
 
 export default router;

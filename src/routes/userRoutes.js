@@ -4,7 +4,8 @@ import {
   getUsers,
   deleteUserData,
   updateUserData,
-  createUserData
+  createUserData,
+  updateUserRole
 } from "../controllers/auth";
 import { validateID, validateUserInfo } from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
@@ -39,6 +40,13 @@ const router = Router()
     permit("admin", "superAdmin", "manager"),
     validateID,
     deleteUserData
+  )
+  .patch(
+    "/:id/role",
+    isAuthenticated,
+    permit("admin", "superAdmin", "manager"),
+    validateID,
+    updateUserRole
   );
 
 export default router;

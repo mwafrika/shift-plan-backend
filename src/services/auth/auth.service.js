@@ -31,6 +31,17 @@ export const findAllUsers = async (options = {}) => User.findAll({
   ...options
 });
 
+export const findAllUsersWhere = async (criteria = {}, options = {}) => {
+  const where = {
+    ...criteria
+  };
+
+  return User.findAll({
+    where,
+    ...options
+  });
+};
+
 export const deleteUser = async (id) => User.destroy({
   where: {
     id
