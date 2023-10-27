@@ -15,6 +15,7 @@ import { hashPassword, generateToken, isTokenExpired } from "../utils/auth";
 import { sendEmail } from "../utils/email";
 import { formatResponse } from "../utils/format";
 import { findRoleByName } from "../services/auth/role.service";
+import { getDepartmentById } from "../services/department/department.service";
 
 export const register = async (req, res) => {
   const {
@@ -33,6 +34,8 @@ export const register = async (req, res) => {
       companyName,
       companyPhone
     });
+
+    // const findDepartment = await getDepartmentById();
 
     const newUser = await createUser({
       email,
@@ -131,11 +134,18 @@ export const login = async (req, res) => {
     include: "role"
   });
 
+  console.log(user, "Users with data");
+
   if (user) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       const token = generateToken(user);
-      return formatResponse(res, StatusCodes.OK, { token }, "Login successful");
+      return formatResponse(
+        res,
+        StatusCodes.OK,
+        { token, user },
+        "Login successful"
+      );
     }
   }
 

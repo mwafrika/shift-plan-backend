@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-
 export const generateToken = (user) => {
+  console.log(user?.role?.name, "check logged in user");
   const token = jwt.sign(
     {
       id: user.id,

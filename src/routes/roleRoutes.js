@@ -9,22 +9,34 @@ import {
 import { validateID } from "../middleware/validateInput";
 import permit from "../middleware/permission";
 import auth from "../middleware/authenticate.user";
+import ROLES from "../utils/constant";
 
 const router = Router()
-  .get("/", auth, permit("admin", "superAdmin"), getRoles)
-  .get("/:id", auth, permit("admin", "superAdmin"), validateID, getRole)
-  .post("/", auth, permit("admin", "superAdmin"), createNewRole)
+  .get(
+    "/",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    getRoles
+  )
+  .get(
+    "/:id",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateID,
+    getRole
+  )
+  .post("/", auth, permit(ROLES.SUPERADMIN), createNewRole)
   .patch(
     "/:id",
     auth,
-    permit("admin", "superAdmin"),
+    permit(ROLES.SUPERADMIN),
     validateID,
     updateExistingRole
   )
   .delete(
     "/:id",
     auth,
-    permit("admin", "superAdmin"),
+    permit(ROLES.SUPERADMIN),
     validateID,
     deleteExistingRole
   );

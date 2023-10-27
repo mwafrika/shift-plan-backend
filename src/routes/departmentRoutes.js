@@ -6,12 +6,43 @@ import {
   removeDepartment,
   updateDepartmentById
 } from "../controllers/department";
-import { validateDepartmentData, validateID } from "../middleware/validateInput";
+import {
+  validateDepartmentData,
+  validateID
+} from "../middleware/validateInput";
+import ROLES from "../utils/constant";
+import permit from "../middleware/permission";
+import auth from "../middleware/authenticate.user";
 
+console.log("ROLES", ROLES);
 const router = Router()
-  .get("/", findAllDepartment)
-  .post("/create", validateDepartmentData, createNewDepartment)
-  .patch("/:id", validateID, validateDepartmentData, updateDepartmentById)
-  .delete("/:id", validateID, removeDepartment);
+  .get(
+    "/",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+    findAllDepartment
+  )
+  .post(
+    "/create",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateDepartmentData,
+    createNewDepartment
+  )
+  .patch(
+    "/:id",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateID,
+    validateDepartmentData,
+    updateDepartmentById
+  )
+  .delete(
+    "/:id",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateID,
+    removeDepartment
+  );
 
 export default router;

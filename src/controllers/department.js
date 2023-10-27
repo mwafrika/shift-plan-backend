@@ -43,12 +43,8 @@ export const updateDepartmentById = async (req, res) => {
 };
 
 export const createNewDepartment = async (req, res) => {
-  const {
-    departmentName,
-    departmentManager,
-    departmentDescription,
-    companyId
-  } = req.body;
+  const { companyId } = req.user;
+  const { departmentName, departmentManager, departmentDescription } = req.body;
 
   try {
     const newDepartment = await createDepartment({
@@ -74,12 +70,7 @@ export const createNewDepartment = async (req, res) => {
       "Department created successfully"
     );
   } catch (error) {
-    return formatResponse(
-      res,
-      StatusCodes.BAD_REQUEST,
-      null,
-      error.message
-    );
+    return formatResponse(res, StatusCodes.BAD_REQUEST, null, error.message);
   }
 };
 

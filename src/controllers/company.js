@@ -7,6 +7,7 @@ import {
 } from "../services/company/company.service";
 import { formatResponse } from "../utils/format";
 import { findUserWhere, updateUser } from "../services/auth/auth.service";
+import { sendEmail } from "../utils/email";
 
 export const ApproveDenyCompany = async (req, res) => {
   const { id } = req.params;
@@ -125,4 +126,88 @@ export const deleteExistingCompany = async (req, res) => {
     null,
     "company deleted successfully"
   );
+};
+
+// invite people to join your company and send him an email with instructions to join
+
+export const invitePeople = async (req, res) => {
+  const { email } = req.body;
+  const { id } = req.params;
+
+  const company = await findCompanyById(id);
+
+  if (!company) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "Company not found"
+    );
+  }
+
+  const user = await findUserWhere({ email });
+
+  if (user) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "User already exist"
+    );
+  }
+
+  await sendEmail(
+    email,
+    "Invitation to join company",
+    `Click on the link below to join ${company.companyName} company
+    http://localhost:3000/invite/${company.id}`,
+    "Invitation"
+  );
+
+  return formatResponse(
+    res,
+    StatusCodes.OK,
+    null,
+    "Invitation sent successfully"
+  );
+};
+
+// Accept invitation request
+export const acceptInvitation = async (req, res) => {
+  const { id } = req.params;
+
+  const company = await findCompanyById(id);
+
+  if (!company) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "Company not found"
+    );
+  }
+
+  const user = await findUserWhere({ companyId: company.id });
+
+  if (!user) {
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+  }
+
+  const updatedUser = await updateUser(user.id, {
+    isActive: true,
+    companyId: company.id
+  });
+
+  if (!updatedUser) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "Unable to update user"
+    );
+  }
+
+  return formatResponse(res, StatusCodes.OK, {
+    message: "Invitation accepted successfully"
+  });
 };
