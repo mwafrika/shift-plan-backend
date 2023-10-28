@@ -258,6 +258,10 @@ export const getUsers = async (req, res) => {
           },
           {
             association: "shifts"
+          },
+          {
+            association: "department",
+            attributes: ["id", "departmentName", "departmentManager"]
           }
         ]
       }
@@ -399,7 +403,7 @@ export const updateUserData = async (req, res) => {
 export const createUserData = async (req, res) => {
   const { companyId } = req.user;
   const {
-    name, email, password, profilePicture
+    name, email, password, profilePicture, departmentId
   } = req.body;
 
   const user = await findUserWhere({
@@ -419,7 +423,8 @@ export const createUserData = async (req, res) => {
     password: hashedPassword,
     profilePicture,
     companyId,
-    roleId: 4
+    roleId: 4,
+    departmentId
   });
 
   if (!newUser) {

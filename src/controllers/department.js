@@ -75,7 +75,21 @@ export const createNewDepartment = async (req, res) => {
 };
 
 export const findAllDepartment = async (req, res) => {
-  const departments = await getAllDepartment();
+  const { companyId } = req.params;
+  const id = req.user.role.name === "superAdmin" ? companyId : req.user.companyId;
+
+  if (!id) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "Company not found"
+    );
+  }
+
+  const departments = await getAllDepartment({
+    companyId: id
+  });
   if (departments) {
     return formatResponse(res, StatusCodes.OK, departments);
   }

@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "shiftId",
         as: "employees"
       });
+
+      Shift.belongsTo(models.Company, {
+        foreignKey: "companyId",
+        as: "company"
+      });
     }
   }
   Shift.init(

@@ -12,7 +12,7 @@ const router = Router()
   .use("/shifts", ShiftRoutes)
   .use("/users", UserRoutes)
   .use("/roles", RoleRoutes)
-  .use("/departments", DepartmentRoutes)
+  .use("/companies/:companyId/departments", DepartmentRoutes)
   .use("/companies", CompanyRoutes)
   .use("/absences", Absence);
 
