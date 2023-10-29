@@ -5,7 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     // generate a migration for role with name and description
 
-    const password = await hashPassword("!Password123");
+    const password = await hashPassword("!MWAfrika18");
     const roleData = [
       {
         id: 1,
@@ -22,16 +22,16 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 3,
-        name: "employee",
-        description: "employee",
+        id: 4,
+        name: "manager",
+        description: "manager",
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        id: 4,
-        name: "manager",
-        description: "manager",
+        id: 3,
+        name: "employee",
+        description: "employee",
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -701,7 +701,7 @@ module.exports = {
       }
     ];
 
-  await queryInterface.bulkInsert("User", adminData, {
+    await queryInterface.bulkInsert("User", adminData, {
       returning: ["id"]
     });
 
@@ -1136,13 +1136,9 @@ module.exports = {
       assignedShifts.push(assignment);
     });
 
-   await queryInterface.bulkInsert(
-      "EmployeeShift",
-      assignedShifts,
-      {
-        returning: ["id"]
-      }
-    );
+    await queryInterface.bulkInsert("EmployeeShift", assignedShifts, {
+      returning: ["id"]
+    });
 
     const absenceData = [
       {
@@ -1177,7 +1173,7 @@ module.exports = {
       }
     ];
 
-  await queryInterface.bulkInsert("Absence", absenceData, {
+    await queryInterface.bulkInsert("Absence", absenceData, {
       returning: ["id"]
     });
   },

@@ -7,7 +7,10 @@ import {
   createUserData,
   updateUserRole
 } from "../controllers/auth";
-import { validateID, validateUserInfo } from "../middleware/validateInput";
+import {
+  validateEmployee,
+  validateID
+} from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
 import permit from "../middleware/permission";
 import ROLES from "../utils/constant";
@@ -30,7 +33,7 @@ const router = Router()
     "/",
     isAuthenticated,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
-    validateUserInfo,
+    validateEmployee,
     createUserData
   )
   .patch(

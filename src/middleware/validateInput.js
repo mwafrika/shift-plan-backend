@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import userSchema, { validateIdOnly } from "../services/auth/schema";
 import shiftSchema from "../services/shift/shema";
-import userSchemaValidation from "../services/auth/userSchema";
+import userSchemaValidation, { userCreatedByAdmin } from "../services/auth/userSchema";
 import { StatusSchema } from "../services/company/schema";
 import departmentSchema from "../services/department/schema";
 
@@ -41,6 +41,12 @@ export const validateDepartmentData = (req, res, next) => {
 export const validateUserInfo = (req, res, next) => {
   const data = req.body;
   const validationSchema = userSchemaValidation;
+  validateData(req, res, next, data, validationSchema);
+};
+
+export const validateEmployee = (req, res, next) => {
+  const data = req.body;
+  const validationSchema = userCreatedByAdmin;
   validateData(req, res, next, data, validationSchema);
 };
 

@@ -134,8 +134,6 @@ export const login = async (req, res) => {
     include: "role"
   });
 
-  console.log(user, "Users with data");
-
   if (user) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
@@ -339,7 +337,8 @@ export const getUser = async (req, res) => {
           "profilePicture",
           "createdAt",
           "updatedAt"
-        ]
+        ],
+        include: "role"
       }
     );
 
@@ -360,10 +359,13 @@ export const getUser = async (req, res) => {
 export const updateUserData = async (req, res) => {
   const { id } = req.params;
   const { companyId } = req.user;
-  const { name, email, profilePicture } = req.body;
+  const {
+    name, email, profilePicture, roleId
+  } = req.body;
 
   try {
-    const user = await findUserById(id, {
+    const user = await findUserWhere({
+      id,
       companyId
     });
 
@@ -372,10 +374,13 @@ export const updateUserData = async (req, res) => {
     }
 
     const updatedUser = await updateUser(id, {
-      name,
-      email,
-      profilePicture
+      name: name || user.name,
+      email: email || user.email,
+      profilePicture: profilePicture || user.profilePicture,
+      roleId: roleId || user.roleId
     });
+
+    console.log(updatedUser, "updated user", roleId);
 
     if (!updatedUser) {
       return formatResponse(
@@ -386,9 +391,18 @@ export const updateUserData = async (req, res) => {
       );
     }
 
+    const newData = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
     return formatResponse(res, StatusCodes.OK, {
       message: "User updated successfully",
-      updatedUser
+      newData
     });
   } catch (error) {
     return formatResponse(
@@ -403,19 +417,26 @@ export const updateUserData = async (req, res) => {
 export const createUserData = async (req, res) => {
   const { companyId } = req.user;
   const {
-    name, email, password, profilePicture, departmentId
+    name, email, profilePicture, departmentId
   } = req.body;
 
-  const user = await findUserWhere({
-    companyId,
-    email
-  });
+  const user = await findUserWhere(
+    {
+      companyId,
+      email
+    },
+    {
+      include: "company"
+    }
+  );
 
   if (user) {
     return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
   }
 
-  const hashedPassword = await hashPassword(password);
+  const temporaryPassword = process.env.TEMPORARY_PASSWORD;
+
+  const hashedPassword = await hashPassword(temporaryPassword);
 
   const newUser = await createUser({
     name,
@@ -437,6 +458,27 @@ export const createUserData = async (req, res) => {
   }
 
   const token = generateToken(newUser);
+  const includeCompany = await findUserWhere(
+    { id: newUser.id },
+    {
+      include: "company"
+    }
+  );
+
+  const customInfo = {
+    companyName: includeCompany.company.companyName,
+    name: includeCompany.name,
+    generatedPassword: temporaryPassword,
+    email: newUser.email
+  };
+  console.log(includeCompany, "New user created by the admin");
+  // send verification email, temporary password, company name and reset link to the user's email
+  await sendEmail(
+    customInfo,
+    "Account verification",
+    `${process.env.FRONTEND_URL}/reset-password/${newUser.id}/${token}`,
+    "sendCredential"
+  );
 
   return formatResponse(res, StatusCodes.CREATED, {
     message: "User created successfully",

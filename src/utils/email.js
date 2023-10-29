@@ -31,7 +31,9 @@ export const sendEmail = async (user, subject, url, template) => {
       template,
       context: {
         verificationLink: url,
-        username: user.name
+        username: user.name,
+        companyName: user.companyName,
+        generatedPassword: user.generatedPassword
       }
     };
     await transporter.sendMail(mailOptions);
