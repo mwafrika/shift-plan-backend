@@ -5,12 +5,10 @@ import {
   deleteUserData,
   updateUserData,
   createUserData,
-  updateUserRole
+  updateUserRole,
+  getCurrentUser
 } from "../controllers/auth";
-import {
-  validateEmployee,
-  validateID
-} from "../middleware/validateInput";
+import { validateEmployee, validateID } from "../middleware/validateInput";
 import isAuthenticated from "../middleware/authenticate.user";
 import permit from "../middleware/permission";
 import ROLES from "../utils/constant";
@@ -56,6 +54,12 @@ const router = Router()
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     validateID,
     updateUserRole
+  )
+  .get(
+    "/me",
+    isAuthenticated,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+    getCurrentUser
   );
 
 export default router;

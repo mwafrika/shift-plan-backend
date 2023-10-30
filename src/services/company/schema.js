@@ -55,12 +55,17 @@ export const schemaCompany = Joi.object({
       "string.max": "Name should have a maximum length of {#limit}",
       "any.required": "Name is a required field"
     }),
-  userId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "userId should be a number",
-      "number.integer": "userId should be an integer",
-      "number.positive": "userId should be a positive number"
-    }),
+  // userId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "userId should be a number",
+  //     "number.integer": "userId should be an integer",
+  //     "number.positive": "userId should be a positive number"
+  //   }),
+  userId: Joi.optional().messages({
+    "number.base": "userId should be a number",
+    "number.integer": "userId should be an integer",
+    "number.positive": "userId should be a positive number"
+  }),
   status: Joi.string()
     .valid("pending", "approved", "denied")
     .optional()

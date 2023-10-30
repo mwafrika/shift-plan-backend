@@ -41,12 +41,16 @@ const userSchemaValidation = Joi.object({
     "string.base": "Photo should be a string",
     "string.uri": "Photo should be a valid uri"
   }),
-  roleId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "roleId should be a number",
-      "number.integer": "roleId should be an integer",
-      "number.positive": "roleId should be a positive number"
-    }),
+  // roleId: Joi.number().integer().positive().optional().messages({
+  //   "number.base": "roleId should be a number",
+  //   "number.integer": "roleId should be an integer",
+  //   "number.positive": "roleId should be a positive number",
+  // }),
+  roleId: Joi.optional().messages({
+    "number.base": "roleId should be a number",
+    "number.integer": "roleId should be an integer",
+    "number.positive": "roleId should be a positive number"
+  }),
   phone: Joi.string()
     .pattern(/^\+?[0-9()\-\s]+$/)
     .optional()
@@ -54,12 +58,16 @@ const userSchemaValidation = Joi.object({
       "string.base": "Phone should be a string",
       "string.pattern.base": "Phone should be a valid phone number"
     }),
-  departmentId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "departmentId should be a number",
-      "number.integer": "departmentId should be an integer",
-      "number.positive": "departmentId should be a positive number"
-    }),
+  // departmentId: Joi.number().integer().positive().optional().messages({
+  //   "number.base": "departmentId should be a number",
+  //   "number.integer": "departmentId should be an integer",
+  //   "number.positive": "departmentId should be a positive number",
+  // }),
+  departmentId: Joi.optional().messages({
+    "number.base": "departmentId should be a number",
+    "number.integer": "departmentId should be an integer",
+    "number.positive": "departmentId should be a positive number"
+  }),
   address: Joi.string().min(3).max(100).optional()
     .messages({
       "string.base": "Address should be a string",
@@ -84,12 +92,17 @@ const userSchemaValidation = Joi.object({
       "string.min": "Description should have a minimum length of {#limit}",
       "string.max": "Description should have a maximum length of {#limit}"
     }),
-  companyId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "companyId should be a number",
-      "number.integer": "companyId should be an integer",
-      "number.positive": "companyId should be a positive number"
-    })
+  // companyId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "companyId should be a number",
+  //     "number.integer": "companyId should be an integer",
+  //     "number.positive": "companyId should be a positive number"
+  //   }),
+  companyId: Joi.optional().messages({
+    "number.base": "companyId should be a number",
+    "number.integer": "companyId should be an integer",
+    "number.positive": "companyId should be a positive number"
+  })
 });
 
 export const userCreatedByAdmin = Joi.object({
@@ -133,12 +146,17 @@ export const userCreatedByAdmin = Joi.object({
     "string.base": "Photo should be a string",
     "string.uri": "Photo should be a valid uri"
   }),
-  roleId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "roleId should be a number",
-      "number.integer": "roleId should be an integer",
-      "number.positive": "roleId should be a positive number"
-    }),
+  // roleId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "roleId should be a number",
+  //     "number.integer": "roleId should be an integer",
+  //     "number.positive": "roleId should be a positive number"
+  //   }),
+  roleId: Joi.optional().messages({
+    "number.base": "roleId should be a number",
+    "number.integer": "roleId should be an integer",
+    "number.positive": "roleId should be a positive number"
+  }),
   phone: Joi.string()
     .pattern(/^\+?[0-9()\-\s]+$/)
     .optional()
@@ -146,12 +164,17 @@ export const userCreatedByAdmin = Joi.object({
       "string.base": "Phone should be a string",
       "string.pattern.base": "Phone should be a valid phone number"
     }),
-  departmentId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "departmentId should be a number",
-      "number.integer": "departmentId should be an integer",
-      "number.positive": "departmentId should be a positive number"
-    }),
+  // departmentId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "departmentId should be a number",
+  //     "number.integer": "departmentId should be an integer",
+  //     "number.positive": "departmentId should be a positive number"
+  //   }),
+  departmentId: Joi.optional().messages({
+    "number.base": "departmentId should be a number",
+    "number.integer": "departmentId should be an integer",
+    "number.positive": "departmentId should be a positive number"
+  }),
   address: Joi.string().min(3).max(100).optional()
     .messages({
       "string.base": "Address should be a string",
@@ -176,12 +199,17 @@ export const userCreatedByAdmin = Joi.object({
       "string.min": "Description should have a minimum length of {#limit}",
       "string.max": "Description should have a maximum length of {#limit}"
     }),
-  companyId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "companyId should be a number",
-      "number.integer": "companyId should be an integer",
-      "number.positive": "companyId should be a positive number"
-    })
+  // companyId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "companyId should be a number",
+  //     "number.integer": "companyId should be an integer",
+  //     "number.positive": "companyId should be a positive number"
+  //   })
+  companyId: Joi.optional().messages({
+    "number.base": "companyId should be a number",
+    "number.integer": "companyId should be an integer",
+    "number.positive": "companyId should be a positive number"
+  })
 });
 
 export const validateIdOnly = Joi.object({

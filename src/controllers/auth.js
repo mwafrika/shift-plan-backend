@@ -360,7 +360,15 @@ export const updateUserData = async (req, res) => {
   const { id } = req.params;
   const { companyId } = req.user;
   const {
-    name, email, profilePicture, roleId
+    name,
+    email,
+    profilePicture,
+    roleId,
+    departmentId,
+    phone,
+    country,
+    city,
+    address
   } = req.body;
 
   try {
@@ -377,7 +385,12 @@ export const updateUserData = async (req, res) => {
       name: name || user.name,
       email: email || user.email,
       profilePicture: profilePicture || user.profilePicture,
-      roleId: roleId || user.roleId
+      roleId: roleId || user.roleId,
+      departmentId: departmentId || user.departmentId,
+      phone: phone || user.phone,
+      country: country || user.country,
+      city: city || user.city,
+      address: address || user.address
     });
 
     console.log(updatedUser, "updated user", roleId);
@@ -516,4 +529,151 @@ export const updateUserRole = async (req, res) => {
     message: "User updated successfully",
     updatedUser
   });
+};
+
+export const getUsersPerDepartment = async (req, res) => {
+  const { companyId } = req.user;
+  const { id } = req.params;
+
+  try {
+    const users = await findAllUsersWhere(
+      {
+        companyId,
+        departmentId: id
+      },
+      {
+        attributes: [
+          "id",
+          "name",
+          "email",
+          "roleId",
+          "companyId",
+          "departmentId",
+          "isActive",
+          "profilePicture",
+          "createdAt",
+          "updatedAt"
+        ],
+        include: [
+          {
+            association: "role",
+            attributes: ["id", "name"]
+          },
+          {
+            association: "shifts"
+          }
+        ]
+      }
+    );
+
+    if (users.length === 0) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "Users not found");
+    }
+
+    return formatResponse(res, StatusCodes.OK, users);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  const { id } = req.user;
+  console.log("Me from xxxxxxxx", id);
+
+  try {
+    const user = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+    return formatResponse(res, StatusCodes.OK, user);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const updateCurrentUser = async (req, res) => {
+  const { id } = req.user;
+  const {
+    name,
+    email,
+    profilePicture,
+    roleId,
+    departmentId,
+    phone,
+    country,
+    city,
+    address
+  } = req.body;
+
+  try {
+    const user = await findUserWhere({
+      id
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const updatedUser = await updateUser(id, {
+      name: name || user.name,
+      email: email || user.email,
+      profilePicture: profilePicture || user.profilePicture,
+      roleId: roleId || user.roleId,
+      departmentId: departmentId || user.departmentId,
+      phone: phone || user.phone,
+      country: country || user.country,
+      city: city || user.city,
+      address: address || user.address
+    });
+
+    console.log(updatedUser, "updated user", roleId);
+
+    if (!updatedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error updating user"
+      );
+    }
+
+    const newData = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "Profile updated successfully",
+      newData
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
 };

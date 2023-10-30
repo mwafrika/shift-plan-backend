@@ -96,6 +96,21 @@ export const findAllDepartment = async (req, res) => {
   return formatResponse(res, StatusCodes.EXPECTATION_FAILED);
 };
 
+export const findDepartmentById = async (req, res) => {
+  const { id } = req.params;
+  const department = await getDepartmentById(id);
+
+  if (!department) {
+    return formatResponse(
+      res,
+      StatusCodes.NOT_FOUND,
+      null,
+      "Department not found"
+    );
+  }
+  return formatResponse(res, StatusCodes.OK, department);
+};
+
 export const removeDepartment = async (req, res) => {
   const { id } = req.params;
   const department = await deleteDepartment(id);

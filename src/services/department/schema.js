@@ -25,12 +25,17 @@ const departmentSchema = Joi.object({
       "string.max": "Description should have a maximum length of {#limit}"
     }),
 
-  companyId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "companyId should be a number",
-      "number.integer": "companyId should be an integer",
-      "number.positive": "companyId should be a positive number"
-    })
+  // companyId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "companyId should be a number",
+  //     "number.integer": "companyId should be an integer",
+  //     "number.positive": "companyId should be a positive number"
+  //   })
+  companyId: Joi.optional().messages({
+    "number.base": "companyId should be a number",
+    "number.integer": "companyId should be an integer",
+    "number.positive": "companyId should be a positive number"
+  })
 });
 
 export const validateIdOnly = Joi.object({

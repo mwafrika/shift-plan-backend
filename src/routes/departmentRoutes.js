@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   createNewDepartment,
   findAllDepartment,
+  findDepartmentById,
   removeDepartment,
   updateDepartmentById
 } from "../controllers/department";
@@ -13,6 +14,7 @@ import {
 import ROLES from "../utils/constant";
 import permit from "../middleware/permission";
 import auth from "../middleware/authenticate.user";
+import { getUsersPerDepartment } from "../controllers/auth";
 
 console.log("ROLES", ROLES);
 const router = Router()
@@ -43,6 +45,20 @@ const router = Router()
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     validateID,
     removeDepartment
+  )
+  .get(
+    "/:id",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateID,
+    findDepartmentById
+  )
+  .get(
+    "/:id/users",
+    auth,
+    permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
+    validateID,
+    getUsersPerDepartment
   );
 
 export default router;

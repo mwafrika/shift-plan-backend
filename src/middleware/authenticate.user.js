@@ -23,7 +23,7 @@ const auth = (req, res, next) => {
       companyId: decodedToken?.companyId,
       role: decodedToken?.role
     };
-
+console.log("req.user", typeof req.user.id);
     return next();
   } catch (error) {
     return formatResponse(
