@@ -10,6 +10,7 @@ import {
 import { formatResponse } from "../utils/format";
 import { findUserById } from "../services/auth/auth.service";
 import { findCompanyById } from "../services/company/company.service";
+import Socket from "../services/shift/shiftSocket";
 
 export const createShiftController = async (req, res) => {
   try {
@@ -143,6 +144,8 @@ export const updateShiftController = async (req, res) => {
         "Unable to update shift"
       );
     }
+
+    Socket.emitShiftUpdated(id, updatedShift);
 
     const data = await findShiftById(id);
 

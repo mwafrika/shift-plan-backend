@@ -620,7 +620,9 @@ export const updateCurrentUser = async (req, res) => {
     phone,
     country,
     city,
-    address
+    address,
+    description,
+    companyDescription
   } = req.body;
 
   try {
@@ -641,7 +643,9 @@ export const updateCurrentUser = async (req, res) => {
       phone: phone || user.phone,
       country: country || user.country,
       city: city || user.city,
-      address: address || user.address
+      address: address || user.address,
+      description: description || user.description,
+      companyDescription: companyDescription || user.companyDescription
     });
 
     console.log(updatedUser, "updated user", roleId);
