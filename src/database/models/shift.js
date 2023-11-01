@@ -24,11 +24,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Shift.init(
     {
-      employee: DataTypes.STRING,
-      startDate: DataTypes.DATE,
-      endDate: DataTypes.DATE,
+      shiftName: DataTypes.STRING,
       startTime: DataTypes.STRING,
-      endTime: DataTypes.STRING
+      endTime: DataTypes.STRING,
+      companyId: DataTypes.INTEGER
     },
     {
       sequelize,

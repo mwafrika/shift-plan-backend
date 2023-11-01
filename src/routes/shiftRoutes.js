@@ -48,10 +48,9 @@ const router = Router()
     getShiftByIdController
   )
   .post(
-    "/:shiftId/users/:userId/assign",
+    "/assign",
     isAuthenticated,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
-    // validateID,
     assignShiftToUsers
   );
 

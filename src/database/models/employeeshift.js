@@ -26,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       shiftId: DataTypes.INTEGER,
-      description: DataTypes.TEXT
+      description: DataTypes.TEXT,
+      startDate: DataTypes.DATE,
+      endDate: DataTypes.DATE
     },
     {
       sequelize,

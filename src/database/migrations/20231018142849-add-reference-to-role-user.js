@@ -1,5 +1,3 @@
-"use strict";
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,16 +5,16 @@ module.exports = {
       type: Sequelize.INTEGER,
       references: {
         model: "Role",
-        key: "id",
+        key: "id"
       },
       onDelete: "SET NULL",
-      onUpdate: "SET NULL",
+      onUpdate: "SET NULL"
     });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.changeColumn("User", "roleId", {
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER
     });
-  },
+  }
 };

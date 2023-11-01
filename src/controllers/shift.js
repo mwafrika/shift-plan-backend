@@ -1,4 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import { isAfter, isBefore } from "date-fns";
+import { Op } from "sequelize";
+import moment from "moment";
 import {
   createShift,
   deleteShift,
@@ -11,6 +14,9 @@ import { formatResponse } from "../utils/format";
 import { findUserById } from "../services/auth/auth.service";
 import { findCompanyById } from "../services/company/company.service";
 import Socket from "../services/shift/shiftSocket";
+
+// import employeeshift model
+import { EmployeeShift, Shift } from "../database/models/index";
 
 export const createShiftController = async (req, res) => {
   try {
@@ -64,7 +70,9 @@ export const getAllShiftsController = async (req, res) => {
     }
 
     const shifts = await findAllShifts(
-      {},
+      {
+        companyId
+      },
       {
         include: "employees"
       }
@@ -200,15 +208,73 @@ export const deleteShiftController = async (req, res) => {
   }
 };
 
+const assignShiftsToUsers = async (userIDs, shiftId, startDate, endDate) => Promise.all(
+  userIDs.map(async (userId) => {
+    const user = await findUserById(userId);
+    if (!user) {
+      return {
+        success: false,
+        message: `User with ID ${userId} not found`
+      };
+    }
+
+    const existingShift = await EmployeeShift.findOne({
+      where: {
+        userId,
+        shiftId,
+        startDate
+      }
+    });
+    if (existingShift) {
+      return {
+        success: false,
+        message: `User with ID ${userId} already assigned to this shift`
+      };
+    }
+
+    const newShift = await assignShiftToEmployee({
+      userId,
+      shiftId,
+      startDate,
+      endDate
+    });
+    if (!newShift) {
+      return {
+        success: false,
+        message: `Unable to assign shift to user with ID ${userId}`
+      };
+    }
+
+    return {
+      success: true,
+      message: `Shift assigned to user with ID ${userId} successfully`
+    };
+  })
+);
+
 export const assignShiftToUsers = async (req, res) => {
   try {
-    const { userId, shiftId } = req.params;
-    const user = await findUserById(userId);
-    const shift = await findShiftById(shiftId);
+    const {
+      userIDs, shiftId, startDate, endDate
+    } = req.body;
+    const shiftID = parseInt(shiftId, 10);
 
-    if (!user) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+    if (
+      !Array.isArray(userIDs)
+      || !userIDs.length
+      || !shiftID
+      || !startDate
+      || !endDate
+    ) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Invalid request data"
+      );
     }
+
+    const shift = await findShiftById(shiftID);
 
     if (!shift) {
       return formatResponse(
@@ -219,22 +285,32 @@ export const assignShiftToUsers = async (req, res) => {
       );
     }
 
-    const newShift = await assignShiftToEmployee({ userId, shiftId });
+    const assignments = await assignShiftsToUsers(
+      userIDs,
+      shiftID,
+      startDate,
+      endDate
+    );
 
-    if (!newShift) {
+    const failedAssignments = assignments.filter((result) => !result.success);
+
+    if (failedAssignments.length > 0) {
       return formatResponse(
         res,
         StatusCodes.BAD_REQUEST,
         null,
-        "Unable to assign shift"
+        "Unable to assign shift to some users",
+        {
+          failedAssignments
+        }
       );
     }
 
     return formatResponse(
       res,
       StatusCodes.OK,
-      newShift,
-      "Shift assigned successfully"
+      null,
+      "Shift assigned to users successfully"
     );
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
