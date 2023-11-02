@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Shift.hasMany(models.EmployeeShift, {
         foreignKey: "shiftId",
-        as: "employees"
+        as: "shiftEmployees"
       });
 
       Shift.belongsTo(models.Company, {

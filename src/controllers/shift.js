@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { isAfter, isBefore } from "date-fns";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import moment from "moment";
 import {
   createShift,
@@ -14,9 +14,7 @@ import { formatResponse } from "../utils/format";
 import { findUserById } from "../services/auth/auth.service";
 import { findCompanyById } from "../services/company/company.service";
 import Socket from "../services/shift/shiftSocket";
-
-// import employeeshift model
-import { EmployeeShift, Shift } from "../database/models/index";
+import { EmployeeShift, Shift, User } from "../database/models/index";
 
 export const createShiftController = async (req, res) => {
   try {
@@ -54,8 +52,14 @@ export const createShiftController = async (req, res) => {
   }
 };
 
+function isValidDate(dateString) {
+  const parsedDate = Date.parse(dateString);
+  return !isNaN(parsedDate);
+}
+
 export const getAllShiftsController = async (req, res) => {
   const { companyId } = req.user;
+  const { startDate, endDate } = req.query;
 
   const isAllowed = findCompanyById(companyId);
 
@@ -69,16 +73,41 @@ export const getAllShiftsController = async (req, res) => {
       );
     }
 
-    const shifts = await findAllShifts(
-      {
-        companyId
-      },
-      {
-        include: "employees"
-      }
-    );
+    const filters = { companyId };
+    const where = {};
 
-    if (!shifts) {
+    if (isValidDate(startDate) && isValidDate(endDate)) {
+      where.createdAt = {
+        [Op.gte]: new Date(startDate),
+        [Op.lte]: new Date(endDate)
+      };
+    }
+
+    const shifts = await Shift.findAll({
+      where: filters,
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email", "address", "phone"],
+          include: [
+            {
+              model: EmployeeShift,
+              as: "shifts",
+              attributes: [
+                "description",
+                "startDate",
+                "endDate",
+                "createdAt",
+                "updatedAt"
+              ],
+              where
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!shifts || shifts.length === 0) {
       return formatResponse(
         res,
         StatusCodes.NOT_FOUND,
@@ -86,7 +115,7 @@ export const getAllShiftsController = async (req, res) => {
         "No shifts found"
       );
     }
-
+    
     return formatResponse(
       res,
       StatusCodes.OK,

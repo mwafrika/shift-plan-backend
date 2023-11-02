@@ -1,7 +1,7 @@
-import socketIO from "socket.io";
+import { Server } from "socket.io";
 
-const Server = (server) => {
-  const io = socketIO(server);
+const ServerSocket = (server) => {
+  const io = new Server(server);
 
   io.on("connection", (socket) => {
     console.log("A user connected");
@@ -29,4 +29,4 @@ const Server = (server) => {
   };
 };
 
-export default Server;
+export default ServerSocket;

@@ -35,7 +35,7 @@ const router = Router()
     deleteShiftController
   )
   .get(
-    "/",
+    "/employees",
     isAuthenticated,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
     getAllShiftsController
