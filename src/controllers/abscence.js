@@ -86,7 +86,9 @@ export const deleteAbsenceController = async (req, res) => {
 };
 
 export const getAllAbsencesController = async (req, res) => {
-  const absences = await findAllAbsences();
+  const absences = await findAllAbsences({
+    include: "user"
+  });
   if (absences.length === 0) {
     return formatResponse(
       res,
@@ -100,7 +102,9 @@ export const getAllAbsencesController = async (req, res) => {
 
 export const getAbsenceByUserIdController = async (req, res) => {
   const { id } = req.params;
-  const absence = await findAbsenceByUserId(id);
+  const absence = await findAbsenceByUserId(id, {
+    include: "user"
+  });
   if (!absence) {
     return formatResponse(
       res,
@@ -116,7 +120,7 @@ export const approveDenyAbsenceController = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  if (status !== "approved" && status !== "denied") {
+  if (status !== "approved" || status !== "denied" || status !== "pending") {
     return formatResponse(
       res,
       StatusCodes.BAD_REQUEST,

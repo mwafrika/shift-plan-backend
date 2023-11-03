@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const schema = Joi.object({
-  name: Joi.string().min(6).max(30).required()
+  name: Joi.string().min(3).max(30).optional()
     .messages({
       "string.base": "Name should be a string",
       "string.empty": "Name cannot be empty",

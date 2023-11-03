@@ -13,31 +13,31 @@ import ROLES from "../utils/constant";
 
 const router = Router()
   .post(
-    "/abscence",
+    "/",
     auth,
     permit(ROLES.EMPLOYEE, ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     createAbsenceController
   )
   .delete(
-    "/abscence/:id",
+    "/:id",
     auth,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     deleteAbsenceController
   )
   .get(
-    "/abscence",
+    "/",
     auth,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     getAllAbsencesController
   )
   .get(
-    "/abscence/:userId",
+    "/:id",
     auth,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     getAbsenceByUserIdController
   )
   .patch(
-    "/abscence/:id",
+    "/:id/approve",
     auth,
     permit(ROLES.SUPERADMIN, ROLES.ADMIN, ROLES.MANAGER),
     approveDenyAbsenceController

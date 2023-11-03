@@ -1,8 +1,8 @@
 import { Absence } from "../../database/models/index";
 
-export const findAbsenceByUserId = async (userId, options = {}) => Absence.findOne({
+export const findAbsenceByUserId = async (id, options = {}) => Absence.findOne({
   where: {
-    userId
+    id
   },
   ...options
 });

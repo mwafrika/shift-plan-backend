@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import userSchema, { validateIdOnly } from "../services/auth/schema";
 import shiftSchema from "../services/shift/shema";
 import userSchemaValidation, {
-  userCreatedByAdmin,
+  userCreatedByAdmin
 } from "../services/auth/userSchema";
 import { StatusSchema } from "../services/company/schema";
 import departmentSchema from "../services/department/schema";

@@ -23,6 +23,7 @@ export const register = async (req, res) => {
   } = req.body;
   try {
     const user = await findUserByEmail(email);
+
     if (user) {
       return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
     }
