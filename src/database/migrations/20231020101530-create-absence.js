@@ -1,27 +1,25 @@
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Shift", {
+    await queryInterface.createTable('Absence', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      employee: {
-        type: Sequelize.STRING
+      reason: {
+        type: Sequelize.TEXT
       },
       startDate: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       endDate: {
-        type: Sequelize.DATE
-      },
-      startTime: {
         type: Sequelize.STRING
       },
-      endTime: {
-        type: Sequelize.STRING
+      userId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Shift");
+    await queryInterface.dropTable('Absence');
   }
 };

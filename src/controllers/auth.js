@@ -1,21 +1,21 @@
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcryptjs";
+import { Op } from "sequelize";
 import {
   findUserByEmail,
   createUser,
   findUserById,
   updateUser,
-  findAllUsers,
-  deleteUser
+  findAllUsersWhere,
+  deleteUser,
+  findUserWhere
 } from "../services/auth/auth.service";
 import { createCompany } from "../services/company/company.service";
-import {
-  hashPassword,
-  generateToken,
-  sendEmail,
-  isTokenExpired
-} from "../utils/auth";
+import { hashPassword, generateToken, isTokenExpired } from "../utils/auth";
+import { sendEmail } from "../utils/email";
 import { formatResponse } from "../utils/format";
+import { findRoleByName } from "../services/auth/role.service";
+import { getDepartmentById } from "../services/department/department.service";
 
 export const register = async (req, res) => {
   const {
@@ -23,6 +23,7 @@ export const register = async (req, res) => {
   } = req.body;
   try {
     const user = await findUserByEmail(email);
+
     if (user) {
       return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
     }
@@ -34,6 +35,8 @@ export const register = async (req, res) => {
       companyName,
       companyPhone
     });
+
+    // const findDepartment = await getDepartmentById();
 
     const newUser = await createUser({
       email,
@@ -70,8 +73,15 @@ export const register = async (req, res) => {
 
     const generatedToken = generateToken(newUser);
 
+    await sendEmail(
+      newUser,
+      "Account verification",
+      `${process.env.FRONTEND_URL}/verify-account/${newUser.id}/${generatedToken}`,
+      "verifyAccount"
+    );
+
     return formatResponse(res, StatusCodes.CREATED, {
-      message: "Company created successfully",
+      message: "Company created successfully, Please verify your email",
       token: generatedToken,
       user: responseUser,
       company: responseCompany
@@ -86,6 +96,39 @@ export const register = async (req, res) => {
   }
 };
 
+export const verifyAccount = async (req, res) => {
+  const { id, token } = req.params;
+
+  const user = await findUserById(id);
+
+  if (!user) {
+    return formatResponse(res, StatusCodes.NOT_FOUND, null, "User not found");
+  }
+
+  const isTokenValid = isTokenExpired(token);
+
+  if (isTokenValid) {
+    return formatResponse(res, StatusCodes.UNAUTHORIZED, null, "Token expired");
+  }
+
+  const updatedUser = await updateUser(id, {
+    isActive: true
+  });
+
+  if (!updatedUser) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "Error updating user"
+    );
+  }
+
+  return formatResponse(res, StatusCodes.OK, {
+    message: "Account verified successfully"
+  });
+};
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findUserByEmail(email, {
@@ -96,7 +139,12 @@ export const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       const token = generateToken(user);
-      return formatResponse(res, StatusCodes.OK, { token }, "Login successful");
+      return formatResponse(
+        res,
+        StatusCodes.OK,
+        { token, user },
+        "Login successful"
+      );
     }
   }
 
@@ -118,9 +166,10 @@ export const forgetPassword = async (req, res) => {
   const token = generateToken(user);
 
   const info = await sendEmail(
-    email,
+    user,
     "Password reset",
-    `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.id}/${token}`
+    `${process.env.FRONTEND_URL}/reset-password/${user.id}/${token}`,
+    "forgetPassword"
   );
 
   return formatResponse(res, StatusCodes.OK, {
@@ -166,49 +215,16 @@ export const resetPassword = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
-  const { companyId } = req.user;
-  try {
-    const users = await findAllUsers({
-      where: {
-        companyId
-      },
-      attributes: [
-        "id",
-        "name",
-        "email",
-        "roleId",
-        "companyId",
-        "departmentId",
-        "isActive",
-        "profilePicture",
-        "createdAt",
-        "updatedAt"
-      ],
-      include: "shifts"
-    });
-
-    if (users.length === 0) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "Users not found");
-    }
-    return formatResponse(res, StatusCodes.OK, users);
-  } catch (error) {
-    return formatResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      null,
-      error.message
-    );
-  }
-};
-
-export const getUser = async (req, res) => {
-  const { id, companyId } = req.params;
+  const { companyId, role } = req.user;
+  const roleByName = await findRoleByName(role);
 
   try {
-    const user = await findUserById(
-      id,
+    const users = await findAllUsersWhere(
       {
-        companyId
+        companyId,
+        roleId: {
+          [Op.ne]: roleByName.id
+        }
       },
       {
         attributes: [
@@ -222,61 +238,35 @@ export const getUser = async (req, res) => {
           "profilePicture",
           "createdAt",
           "updatedAt"
+        ],
+        include: [
+          {
+            association: "role",
+            attributes: ["id", "name"]
+          },
+
+          {
+            association: "company",
+            attributes: ["id", "companyName", "companyAddress", "companyPhone"],
+            include: [
+              {
+                association: "departments",
+                attributes: ["id", "departmentName", "departmentManager"]
+              }
+            ]
+          },
+          {
+            association: "shifts"
+          },
+          {
+            association: "department",
+            attributes: ["id", "departmentName", "departmentManager"]
+          }
         ]
       }
     );
 
-    if (!user) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
-    }
-    return formatResponse(res, StatusCodes.OK, user);
-  } catch (error) {
-    return formatResponse(
-      res,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-      null,
-      error.message
-    );
-  }
-};
-
-export const updateUserData = async (req, res) => {
-  const { id, companyId } = req.params;
-  const {
-    name, email, password, profilePicture
-  } = req.body;
-
-  try {
-    const user = await findUserById(id, {
-      companyId
-    });
-
-    if (!user) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    const updatedUser = await updateUser(id, {
-      name,
-      email,
-      password: hashedPassword,
-      profilePicture
-    });
-
-    if (!updatedUser) {
-      return formatResponse(
-        res,
-        StatusCodes.BAD_REQUEST,
-        null,
-        "Error updating user"
-      );
-    }
-
-    return formatResponse(res, StatusCodes.OK, {
-      message: "User updated successfully",
-      updatedUser
-    });
+    return formatResponse(res, StatusCodes.OK, users);
   } catch (error) {
     return formatResponse(
       res,
@@ -288,7 +278,8 @@ export const updateUserData = async (req, res) => {
 };
 
 export const deleteUserData = async (req, res) => {
-  const { id, companyId } = req.params;
+  const { id } = req.params;
+  const { companyId } = req.user;
   try {
     const user = await findUserById(id, {
       companyId
@@ -322,30 +313,150 @@ export const deleteUserData = async (req, res) => {
   }
 };
 
-export const createUserData = async (req, res) => {
-  const { companyId } = req.user;
+export const getUser = async (req, res) => {
   const { id } = req.params;
+  const { companyId } = req.user;
+
+  try {
+    const user = await findUserById(
+      id,
+      {
+        companyId
+      },
+      {
+        attributes: [
+          "id",
+          "name",
+          "email",
+          "roleId",
+          "companyId",
+          "departmentId",
+          "isActive",
+          "profilePicture",
+          "createdAt",
+          "updatedAt"
+        ],
+        include: "role"
+      }
+    );
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+    return formatResponse(res, StatusCodes.OK, user);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const updateUserData = async (req, res) => {
+  const { id } = req.params;
+  const { companyId } = req.user;
   const {
-    name, email, password, profilePicture
+    name,
+    email,
+    profilePicture,
+    roleId,
+    departmentId,
+    phone,
+    country,
+    city,
+    address
   } = req.body;
 
-  const user = await findUserById(id, {
-    companyId,
-    email
-  });
+  try {
+    const user = await findUserWhere({
+      id,
+      companyId
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const updatedUser = await updateUser(id, {
+      name: name || user.name,
+      email: email || user.email,
+      profilePicture: profilePicture || user.profilePicture,
+      roleId: roleId || user.roleId,
+      departmentId: departmentId || user.departmentId,
+      phone: phone || user.phone,
+      country: country || user.country,
+      city: city || user.city,
+      address: address || user.address
+    });
+
+    console.log(updatedUser, "updated user", roleId);
+
+    if (!updatedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error updating user"
+      );
+    }
+
+    const newData = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "User updated successfully",
+      newData
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const createUserData = async (req, res) => {
+  const { companyId } = req.user;
+  const {
+    name, email, profilePicture, departmentId, roleId
+  } = req.body;
+
+  const user = await findUserWhere(
+    {
+      companyId,
+      email
+    },
+    {
+      include: "company"
+    }
+  );
 
   if (user) {
     return formatResponse(res, StatusCodes.CONFLICT, null, "User exists");
   }
 
-  const hashedPassword = await hashPassword(password);
+  const temporaryPassword = process.env.TEMPORARY_PASSWORD;
+
+  const hashedPassword = await hashPassword(temporaryPassword);
 
   const newUser = await createUser({
     name,
     email,
     password: hashedPassword,
     profilePicture,
-    companyId
+    companyId,
+    roleId: roleId || 4,
+    departmentId
   });
 
   if (!newUser) {
@@ -358,10 +469,209 @@ export const createUserData = async (req, res) => {
   }
 
   const token = generateToken(newUser);
+  const includeCompany = await findUserWhere(
+    { id: newUser.id },
+    {
+      include: "company"
+    }
+  );
+
+  const customInfo = {
+    companyName: includeCompany.company.companyName,
+    name: includeCompany.name,
+    generatedPassword: temporaryPassword,
+    email: newUser.email
+  };
+  console.log(includeCompany, "New user created by the admin");
+  // send verification email, temporary password, company name and reset link to the user's email
+  await sendEmail(
+    customInfo,
+    "Account verification",
+    `${process.env.FRONTEND_URL}/reset-password/${newUser.id}/${token}`,
+    "sendCredential"
+  );
 
   return formatResponse(res, StatusCodes.CREATED, {
     message: "User created successfully",
     token,
     newUser
   });
+};
+
+export const updateUserRole = async (req, res) => {
+  const { id } = req.params;
+  const { companyId } = req.user;
+
+  const user = await findUserById(id, {
+    companyId
+  });
+
+  if (!user) {
+    return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+  }
+
+  const updatedUser = await updateUser(id, {
+    roleId: req.body.roleId
+  });
+
+  if (!updatedUser) {
+    return formatResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      null,
+      "Error updating user"
+    );
+  }
+
+  return formatResponse(res, StatusCodes.OK, {
+    message: "User updated successfully",
+    updatedUser
+  });
+};
+
+export const getUsersPerDepartment = async (req, res) => {
+  const { companyId } = req.user;
+  const { id } = req.params;
+
+  try {
+    const users = await findAllUsersWhere(
+      {
+        companyId,
+        departmentId: id
+      },
+      {
+        attributes: [
+          "id",
+          "name",
+          "email",
+          "roleId",
+          "companyId",
+          "departmentId",
+          "isActive",
+          "profilePicture",
+          "createdAt",
+          "updatedAt"
+        ],
+        include: [
+          {
+            association: "role",
+            attributes: ["id", "name"]
+          },
+          {
+            association: "shifts"
+          }
+        ]
+      }
+    );
+
+    return formatResponse(res, StatusCodes.OK, users);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  const { id } = req.user;
+  console.log("Me from xxxxxxxx", id);
+
+  try {
+    const user = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+    return formatResponse(res, StatusCodes.OK, user);
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
+};
+
+export const updateCurrentUser = async (req, res) => {
+  const { id } = req.user;
+  const {
+    name,
+    email,
+    profilePicture,
+    roleId,
+    departmentId,
+    phone,
+    country,
+    city,
+    address,
+    description,
+    companyDescription
+  } = req.body;
+
+  try {
+    const user = await findUserWhere({
+      id
+    });
+
+    if (!user) {
+      return formatResponse(res, StatusCodes.NOT_FOUND, [], "User not found");
+    }
+
+    const updatedUser = await updateUser(id, {
+      name: name || user.name,
+      email: email || user.email,
+      profilePicture: profilePicture || user.profilePicture,
+      roleId: roleId || user.roleId,
+      departmentId: departmentId || user.departmentId,
+      phone: phone || user.phone,
+      country: country || user.country,
+      city: city || user.city,
+      address: address || user.address,
+      description: description || user.description,
+      companyDescription: companyDescription || user.companyDescription
+    });
+
+    console.log(updatedUser, "updated user", roleId);
+
+    if (!updatedUser) {
+      return formatResponse(
+        res,
+        StatusCodes.BAD_REQUEST,
+        null,
+        "Error updating user"
+      );
+    }
+
+    const newData = await findUserWhere(
+      {
+        id
+      },
+      {
+        include: "role"
+      }
+    );
+
+    return formatResponse(res, StatusCodes.OK, {
+      message: "Profile updated successfully",
+      newData
+    });
+  } catch (error) {
+    return formatResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      null,
+      error.message
+    );
+  }
 };

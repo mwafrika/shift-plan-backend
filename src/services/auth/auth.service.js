@@ -21,7 +21,7 @@ export const findUserById = async (
 
 export const createUser = async (user) => User.create(user);
 
-export const updateUser = async (id, user) => User.update(user, {
+export const updateUser = async (id, user = {}) => User.update(user, {
   where: {
     id
   }
@@ -31,8 +31,30 @@ export const findAllUsers = async (options = {}) => User.findAll({
   ...options
 });
 
+export const findAllUsersWhere = async (criteria = {}, options = {}) => {
+  const where = {
+    ...criteria
+  };
+
+  return User.findAll({
+    where,
+    ...options
+  });
+};
+
 export const deleteUser = async (id) => User.destroy({
   where: {
     id
   }
 });
+
+export const findUserWhere = async (criteria = {}, options = {}) => {
+  const where = {
+    ...criteria
+  };
+
+  return User.findOne({
+    where,
+    ...options
+  });
+};

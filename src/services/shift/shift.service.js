@@ -1,6 +1,6 @@
 // CRUD operations FOR SHIFTS
 
-import { Shift } from "../../database/models/index";
+import { Shift, EmployeeShift } from "../../database/models/index";
 
 export const findShiftById = async (id, options = {}, and = {}) => Shift.findOne({
   where: {
@@ -12,7 +12,7 @@ export const findShiftById = async (id, options = {}, and = {}) => Shift.findOne
 
 export const createShift = async (shift) => Shift.create(shift);
 
-export const findAllShifts = async (options = {}, and = {}) => Shift.findAll({
+export const findAllShifts = async (and = {}, options = {}) => Shift.findAll({
   where: {
     ...and
   },
@@ -34,3 +34,8 @@ export const deleteShift = async (criteria = {}, options = {}) => Shift.destroy(
 });
 
 export const getShiftWhere = async (where, options = {}) => Shift.findOne({ where, ...options });
+
+// ASSIGN SHIFT TO EMPLOYEE
+export const assignShiftToEmployee = async (employeeShift) => EmployeeShift.create(employeeShift);
+
+

@@ -34,12 +34,17 @@ const shiftSchema = Joi.object({
     .messages({
       "string.pattern.base": "Invalid time format (HH:mm)"
     }),
-  userId: Joi.number().integer().positive().optional()
-    .messages({
-      "number.base": "userId should be a number",
-      "number.integer": "userId should be an integer",
-      "number.positive": "userId should be a positive number"
-    })
+  // userId: Joi.number().integer().positive().optional()
+  //   .messages({
+  //     "number.base": "userId should be a number",
+  //     "number.integer": "userId should be an integer",
+  //     "number.positive": "userId should be a positive number"
+  //   })
+  userId: Joi.optional().messages({
+    "number.base": "userId should be a number",
+    "number.integer": "userId should be an integer",
+    "number.positive": "userId should be a positive number"
+  })
 });
 
 export default shiftSchema;

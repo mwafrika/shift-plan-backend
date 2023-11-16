@@ -16,7 +16,7 @@ export default function permit(...allowed) {
       res,
       StatusCodes.FORBIDDEN,
       null,
-      "You are not authorized to access this resource"
+      "You are not authorized to access this resource",
     );
   };
 }
