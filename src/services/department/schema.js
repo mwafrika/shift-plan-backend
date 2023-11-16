@@ -10,13 +10,11 @@ const departmentSchema = Joi.object({
       "any.required": "Name is a required field"
     }),
 
-  departmentManager: Joi.string().min(3).max(30).optional()
-    .messages({
-      "string.base": "Manager should be a string",
-      "string.empty": "Manager cannot be empty",
-      "string.min": "Manager should have a minimum length of {#limit}",
-      "string.max": "Manager should have a maximum length of {#limit}"
-    }),
+  departmentManager: Joi.optional().messages({
+    "string.base": "Manager should be a string",
+    "string.min": "Manager should have a minimum length of {#limit}",
+    "string.max": "Manager should have a maximum length of {#limit}"
+  }),
 
   departmentDescription: Joi.string().min(6).max(200).optional()
     .messages({

@@ -49,7 +49,7 @@ export const createNewDepartment = async (req, res) => {
   try {
     const newDepartment = await createDepartment({
       departmentName,
-      departmentManager,
+      departmentManager: departmentManager || null,
       departmentDescription,
       companyId
     });

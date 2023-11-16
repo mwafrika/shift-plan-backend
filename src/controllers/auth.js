@@ -266,9 +266,6 @@ export const getUsers = async (req, res) => {
       }
     );
 
-    if (users.length === 0) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "Users not found");
-    }
     return formatResponse(res, StatusCodes.OK, users);
   } catch (error) {
     return formatResponse(
@@ -431,7 +428,7 @@ export const updateUserData = async (req, res) => {
 export const createUserData = async (req, res) => {
   const { companyId } = req.user;
   const {
-    name, email, profilePicture, departmentId
+    name, email, profilePicture, departmentId, roleId
   } = req.body;
 
   const user = await findUserWhere(
@@ -458,7 +455,7 @@ export const createUserData = async (req, res) => {
     password: hashedPassword,
     profilePicture,
     companyId,
-    roleId: 4,
+    roleId: roleId || 4,
     departmentId
   });
 
@@ -566,10 +563,6 @@ export const getUsersPerDepartment = async (req, res) => {
         ]
       }
     );
-
-    if (users.length === 0) {
-      return formatResponse(res, StatusCodes.NOT_FOUND, [], "Users not found");
-    }
 
     return formatResponse(res, StatusCodes.OK, users);
   } catch (error) {
